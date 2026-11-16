@@ -1,0 +1,82 @@
+/*
+ * PLANTILLA de capa de pisos para HeroUI v3 sobre Tailwind v4. Es un punto de partida, NO un valor final.
+ *
+ * Qué hace: lleva el texto a un mínimo de 18 px (--text-*), los controles a un mínimo de 48 px de alto y arregla los
+ * pocos colores por defecto que no llegan a AA. Con `?pisos` el banco (tools/banco/) carga ESTE archivo en lugar del
+ * tema de src/, para medir el antes y el después con `tools/medir.mjs`.
+ *
+ * Antes de usarla en un proyecto:
+ *   1. Cambiá los pisos (1.125rem = 18 px, 3rem = 48 px) por los del proyecto.
+ *   2. Los colores de la sección 2 son candidatos medidos contra blanco con HeroUI 3.2.7: remedíbos con tu versión y
+ *      reemplazalos por los de la marca si existen. Leé los valores reales con `get_theme_variables` del MCP de HeroUI
+ *      (ojo: puede devolver incompleto el modo claro) y con `tools/medir.mjs`, que lee el color ya resuelto.
+ *   3. Si ya lo aprobaste, pasalo a la capa de tema del proyecto (src/index.css), UNA sola vez, y volvé a medir todas
+ *      las pantallas.
+ *
+ * Costo que hay que decir en voz alta: subir --text-xs, --text-sm y --text-base al mismo tamaño APLANA la jerarquía por
+ * tamaño de la librería (las etiquetas y la ayuda pasan a medir igual que el cuerpo). Hay que recuperarla con peso,
+ * color y espaciado, o con una escala propia por encima de 18 px (por ejemplo 18 / 22 / 28). Registralo como decisión.
+ */
+@import "tailwindcss";
+@import "@heroui/styles";
+
+/* 1. Escala de texto: la librería usa text-xs, text-sm y text-base para casi todo. */
+@theme {
+  --text-xs: 1.125rem;
+  --text-xs--line-height: 1.625rem;
+  --text-sm: 1.125rem;
+  --text-sm--line-height: 1.625rem;
+  --text-base: 1.125rem;
+  --text-base--line-height: 1.75rem;
+}
+
+/* El texto sin clase de la librería (contenido de tarjetas, enlaces, paneles) hereda del body: también 18 px. */
+body {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+/* 2. Color: valores por defecto que no llegan a AA (candidatos, ver arriba). */
+:root {
+  --muted: #5f5f68; /* texto secundario: 4.43:1 sobre el fondo por defecto -> 6.3:1 */
+  --accent: #0a63c9; /* botón principal: 3.59:1 con su texto por defecto -> 5.6:1 */
+  --danger: #c62828; /* error como texto sobre blanco: 3.57:1 por defecto -> 5.6:1 */
+  --field-border: #767676; /* los campos vienen SIN borde (1.0:1 contra el fondo); WCAG 1.4.11 pide 3:1 */
+  --field-border-width: 1px;
+}
+
+/* 3. Targets: 48 px de alto como mínimo en todo lo que se toca. En 768 px o más HeroUI baja el alto de los botones
+ *    (36 px): estas reglas ganan en todos los anchos. */
+.button,
+.toggle-button {
+  height: auto;
+  min-height: 3rem;
+  padding-inline: 1.25rem;
+}
+.input,
+.textarea,
+.select__trigger {
+  min-height: 3rem;
+}
+.tabs__tab {
+  height: auto;
+  min-height: 3rem;
+}
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 3rem;
+}
+.radio__content,
+.checkbox__content,
+.switch__content {
+  min-height: 3rem;
+}
+.radio__control,
+.checkbox__control {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Lo que ESTA capa no arregla (medilo igual): el control del Switch (40x20) y el subrayado del Link en pantallas
+ * táctiles. Si el producto no los necesita, no los uses; si los necesita, hay que rehacerlos en el tema. */
