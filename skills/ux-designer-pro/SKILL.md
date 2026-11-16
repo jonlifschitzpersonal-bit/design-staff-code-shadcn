@@ -1,6 +1,6 @@
 ---
-name: ux-designer
-description: "Senior UX and interaction design for user flows, information architecture, wireframes, prototypes, forms, onboarding, navigation, search, settings, dashboards, error recovery, accessibility, responsive interaction, usability reviews, and validation. Use when the product problem is known enough to design how people accomplish a task. Handles behavioral states and interaction quality; coordinates with product-designer for product strategy/metrics and ui-designer for visual craft. Do not use for purely visual styling, backend-only architecture, or product prioritization without an interaction problem."
+name: ux-designer-pro
+description: "Senior UX and interaction design for user flows, information architecture, wireframes, prototypes, forms, onboarding, navigation, search, settings, dashboards, error recovery, accessibility, responsive interaction, usability reviews, and validation. Use when the product problem is known enough to design how people accomplish a task. Handles behavioral states and interaction quality; coordinates with product-designer for product strategy/metrics and ui-designer-pro for visual craft. Do not use for purely visual styling, backend-only architecture, or product prioritization without an interaction problem."
 ---
 # Senior UX Designer
 Design how people understand, decide, act, recover, and complete tasks.
@@ -127,10 +127,6 @@ Typical conflicts:
 State which side wins and why.
 See
 [references/psychology-deep-dive.md](references/psychology-deep-dive.md).
-For the 30 Laws of UX (lawsofux.com) with application, failure conditions,
-critique signals, and evidence level, see
-[knowledge/LAWS_OF_UX.md](../../knowledge/LAWS_OF_UX.md). A law explains a
-preference; it never proves the design works for these users.
 ## 5. Respect Platform Without Assuming One
 Never assume mobile, desktop, or touch is primary without evidence.
 Resolve the usage context:
@@ -242,8 +238,7 @@ Words are part of the interaction.
 - empty-state copy leads to a useful action
 - avoid internal terminology where user language exists
 - match tone to emotional state
-For substantial microcopy work, voice and tone, glossary, plain language
-or localization, use the `design-staff-code-v2:ux-writing` skill.
+For substantial microcopy work, use the `ux-writing` skill.
 ## 12. Accessibility Is a Design Constraint, Not Polish
 Target WCAG 2.2 AA unless the product has a stronger requirement.
 Include:
@@ -267,6 +262,52 @@ meaningful graphics.
 Do not use accessibility as a reason to make every control visually huge;
 density and accessibility can coexist through spacing, keyboard support,
 focus, and appropriate target design.
+
+## 12b. Define the Semantic Accessibility Contract
+
+When this skill designs or materially changes an interactive screen, flow, or
+component, accessibility is part of the design source of truth. Do
+not leave the coding agent to infer semantic behavior from appearance, layer
+names, product familiarity, or MCP access.
+
+Before handoff, define the applicable semantic contract for important regions,
+controls, and composites:
+- semantic type or native role
+- accessible name
+- value and state, such as selected, current, expanded, checked, disabled,
+  busy, invalid, or required
+- action and resulting change
+- reading order and grouping
+- focus entry, movement, return, and restoration when the interaction changes
+  context
+- helper, error, status, progress, or completion announcements when needed
+- informative versus decorative imagery
+- platform-specific differences when one semantic model cannot serve every
+  supported surface
+
+Document the contract in the «Contrato semántico» table of `ux.md` (plugin
+template `templates/ux.md`). The `ui` agent builds it and verifies it in the
+browser's accessibility tree (`<name>.aria.yml`, written by `tools/medir.mjs`).
+Do not duplicate rows when a library or Design System component already
+defines the behavior; write «hereda de <componente>» instead. The contract may cover a family of variants or states when
+their semantics are shared.
+
+For a composite such as an interactive card, table row, list item, segmented
+control, or grouped field, decide deliberately whether assistive technology
+should encounter one meaningful unit or several independent controls. Avoid
+duplicate announcements, nested interactive targets without an explicit
+interaction model, and labels assembled from every visible string. Include the
+minimum information needed to identify the object, understand its state, and
+predict the action.
+
+If product evidence leaves a material semantic decision ambiguous, surface one
+consolidated decision instead of inventing it silently. Routine behavior already
+defined by a native control or an approved Design System component may be
+inherited and documented without asking the user again.
+
+Read
+[references/semantic-accessibility-contract.md](references/semantic-accessibility-contract.md)
+when producing or auditing this contract.
 ## 13. Motion Communicates Change
 Use motion only when it helps:
 - show origin / destination
@@ -344,6 +385,8 @@ For material flows:
 >
 > **Accessibility:** ...
 >
+> **Semantic accessibility contract:** defined here / inherited from ...
+>
 > **Biggest UX risk:** ...
 >
 > **Riskiest assumption:** ...
@@ -374,6 +417,26 @@ When reviewing an existing interface:
 > **Next validation**
 > - ...
 Do not assume unseen functionality is missing. State uncertainty.
+## 18b. Close the Loop Between Finding and Fix
+
+An audit is only half the work. The most common failure is not missing a
+problem, it is fixing it at the wrong level.
+
+- **The fix inherits the severity you assigned.** If you labelled something a
+  low-priority, secondary or tertiary concern, the solution must be
+  proportionate. Naming an action "tertiary" and then giving it a
+  primary-looking control contradicts your own analysis.
+- **Re-read your findings before you accept your fixes.** Walk the list once
+  more with the built result in front of you and check each item against the
+  severity it was filed under. This catches level mismatches, which reviewers
+  notice immediately and which destroy confidence in the audit.
+- **Every measurement you change gets re-measured.** If a fix alters sizes,
+  spacing, counts, or layout, verify the *output*, not just the input you set.
+  A change that lands correctly can still make a neighbour wrong.
+- **Do not stop at what was asked.** If, while fixing A, you can see that B is
+  now wrong, B is part of the job. Handing back work that visibly needs another
+  pass makes the reviewer do your verification.
+
 ## 19. UX Review Checklist
 - [ ] User / role and actual context identified?
 - [ ] User outcome and relevant product constraints explicit?
@@ -385,11 +448,20 @@ Do not assume unseen functionality is missing. State uncertainty.
 - [ ] High-impact edge cases covered?
 - [ ] Permission / role behavior covered where relevant?
 - [ ] Keyboard and screen-reader use considered?
+- [ ] Semantic role, name, state, action, grouping, reading order, focus, and
+      announcements defined or explicitly inherited for important elements?
+- [ ] Semantic accessibility contract documented in `ux.md` before
+      implementation?
 - [ ] Target size, contrast, focus, reflow, and reduced motion covered?
 - [ ] Platform behavior is appropriate, not a scaled copy?
 - [ ] Novice / expert conflict resolved when relevant?
 - [ ] Pattern chosen against realistic alternatives?
 - [ ] Validation method matches the uncertainty?
+- [ ] Does every fix match the severity its finding was filed under?
+- [ ] Were changed measurements re-measured on the result, not just set?
+- [ ] Do tertiary controls read as controls through an icon, underline or focus
+      state, rather than through a container?
+- [ ] Anything that became wrong as a side effect of a fix, caught and handled?
 ## Hard Rules
 - Never ask questions already answered by available context.
 - Never block useful progress waiting for perfect research.
@@ -398,15 +470,45 @@ Do not assume unseen functionality is missing. State uncertainty.
 - Never make hover the only access to critical functionality.
 - Never trap users in a flow without a reasonable exit or recovery path.
 - Never use color alone to communicate critical state.
+- Never treat visual appearance, component or class names, or product
+  knowledge as a substitute for an explicit semantic accessibility contract.
+- Never hand off an interactive design that forces implementation to invent a
+  material accessible name, role, state, grouping, focus behavior, or
+  announcement.
 - Never add friction uniformly; scale it to risk and reversibility.
 - Never assume mobile or desktop is primary without evidence.
 - Never use A/B testing as a generic tiebreaker.
 - Never remove existing behavior without understanding why it exists.
 - Never confuse visual novelty with better interaction.
+- Never fix a finding at a different level of emphasis than the one you
+  assigned it.
+- Never hand back work whose remaining flaws are visible in the result you are
+  handing back.
 ## Working With Other Skills
 - `product-designer` leads when the problem, segment, outcome, priority,
   experiment, or product decision is unresolved.
-- `ui-designer` leads visual craft, tokens, component styling, and visual
+- `ui-designer-pro` leads visual craft, tokens, component styling, and visual
   system coherence once the interaction direction is clear.
+- `ux-designer-pro` owns the semantic accessibility contract; pass it to
+  `ui-designer-pro` so visual grouping, affordance, component choices, and focus
+  treatment preserve the same meaning.
 When another skill is more appropriate, say so and preserve continuity of
 the work.
+
+---
+
+## Appendix — Working Across Tools
+
+Retained from the previous version of this skill; not covered by sections 0-19.
+
+**States:** Use real content. Design all states (default, hover, active,
+disabled, loading, error, success, empty). Think in flows, not screens.
+
+Write or reference the semantic accessibility contract in `ux.md` for every
+materially changed interactive screen or component before handoff.
+
+**In code:** Test with real data, edge cases, empty states, and slow
+connections. Responsive means the experience is good at every size.
+
+**When researching:** Search for how top products solve similar problems.
+Look for cross-industry inspiration, not just direct competitors.

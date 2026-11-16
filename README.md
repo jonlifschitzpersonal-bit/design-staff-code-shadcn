@@ -13,8 +13,8 @@ para ser más rápida y gastar menos tokens.
 | --- | --- | --- | --- |
 | `staff-design-lead` (principal) | **Lead y Product Designer.** Encuadra el problema, decide qué construir, coordina y es el único que habla con vos. | `product-designer` | Encuadre en `brief.md` y un cierre corto en el chat |
 | `discovery` | Research: problema, usuarios, JTBD, oportunidades, MVP y métricas. | `design-discovery` y las referencias de evidencia y métricas de `product-designer` | `brief.md` |
-| `ux` | Flujos, estructura de pantalla, estados y casos límite, interacción y copy. | `ux-designer` + `patterns-and-flows`, `ux-writing`, y las guías de Impeccable `harden`, `clarify` y `onboard` | `ux.md` |
-| `ui` | Diseño visual en código, medición en el navegador y accesibilidad. | `ui-designer` + `polish-and-craft`, `design-accessibility`, las guías de Impeccable `critique` y `distill`, y la documentación de la librería | La pantalla, medida |
+| `ux` | Flujos, estructura de pantalla, estados y casos límite, interacción y copy. | `ux-designer-pro` + `patterns-and-flows` y `semantic-accessibility-contract`, `ux-writing`, y las guías de Impeccable `harden`, `clarify` y `onboard` | `ux.md`, con el contrato semántico |
+| `ui` | Diseño visual en código, medición en el navegador y accesibilidad. | `ui-designer-pro` + `visual-semantics`, `visual-qa` y `polish-and-craft` (y las demás referencias según la tarea), `design-accessibility`, las guías de Impeccable `critique` y `distill`, y la documentación de la librería | La pantalla, medida |
 | `design-critic` | Revisión independiente al final de cada pantalla o flujo nuevo, en una sola pasada. | Los checklists de revisión de las skills | Hallazgos: Corregir / Sugerencia / Externo |
 
 Cada especialista lee sus skills completas, pero solo las suyas: ningún agente carga todo el conocimiento.
@@ -40,7 +40,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | Pieza | Para qué |
 | --- | --- |
 | `agents/` | Los cinco agentes. |
-| `skills/product-designer`, `design-discovery`, `ux-designer`, `ux-writing`, `ui-designer`, `design-accessibility` | El conocimiento senior de cada rol. |
+| `skills/product-designer`, `design-discovery`, `ux-designer-pro`, `ux-writing`, `ui-designer-pro`, `design-accessibility` | El conocimiento senior de cada rol. |
 | `skills/project-setup` | Prepara un proyecto: sección de diseño en `CLAUDE.md`, skill `<proyecto>-ds`, medición y capa de pisos. |
 | `vendor/impeccable/` | 5 guías de Impeccable (`critique`, `clarify`, `distill`, `harden`, `onboard`), Apache-2.0. |
 | `knowledge/SUPERFICIE_CODIGO.md` | Cómo se dibuja y se mide en código. |
@@ -48,7 +48,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `knowledge/LAWS_OF_UX.md` | Leyes de UX con su nivel de evidencia, para consultar a demanda. |
 | `knowledge/REFERENCIAS_MOBBIN.md` | Cómo buscar referencias en el MCP de Mobbin, si está instalado. |
 | `templates/brief.md`, `templates/ux.md` | Los dos documentos de cada iniciativa. |
-| `templates/project/tools/medir.mjs` | Playwright: captura y mide texto, targets, contraste y foco en el DOM real. |
+| `templates/project/tools/medir.mjs` | Playwright: captura y mide texto, targets, contraste, foco y árbol de accesibilidad en el DOM real. |
 | `templates/librerias/heroui/` | Banco de medición y capa de pisos para HeroUI v3. |
 
 ## Instalar

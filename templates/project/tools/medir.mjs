@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Captura una pantalla y mide el DOM real con Playwright.
-// Parte del plugin design-staff-code. Se copia al proyecto como tools/medir.mjs (lo hace project-setup).
+// Parte del plugin design-staff-code-v2. Se copia al proyecto como tools/medir.mjs (lo hace project-setup).
 //
 // Uso (desde la raíz del proyecto, con el servidor de desarrollo levantado):
 //   node tools/medir.mjs --url http://localhost:5173/ --name hoy --out design/<slug>/capturas
@@ -17,6 +17,8 @@
 //   <name>.contraste.json              pares fg/bg en el formato de skills/design-accessibility/scripts/contrast.py
 //                                      (texto y "non-text"). Los de fondo componible vienen resueltos.
 //   <name>.contraste-no-comprobable.json   solo lo que NO se puede medir (fondo con imagen o degradado)
+//   <name>.aria.yml                    árbol de accesibilidad (rol, nombre, estado, orden) para el contrato semántico;
+//                                      los controles sin nombre accesible cuentan como falla con --strict
 //
 // Qué mide y qué no:
 //   - Texto: tamaño, peso, interlineado y color resueltos por el navegador. Los fondos translúcidos se componen sobre
@@ -28,8 +30,9 @@
 //     lado. Mide el estado en que está la página al cargar (sin tildar, sin error).
 //   - Foco con teclado: recorre la página con Tab, compara una captura recortada de cada control con y sin foco y
 //     mide el contraste del aro contra lo que tapa. Es una aproximación por píxeles, no la lectura del CSS.
+//   - Semántica: árbol de accesibilidad (ariaSnapshot) y controles sin nombre accesible.
 //   - NO mide: hover, estado seleccionado o con error si la página no carga en ese estado (abrilo por URL o
-//     parámetro y medí de nuevo), zoom, lector de pantalla, animaciones, contraste sobre imágenes. Los radios dentro
+//     parámetro y medí de nuevo), zoom, la lectura real con un lector de pantalla, animaciones, contraste sobre imágenes. Los radios dentro
 //     de un grupo se recorren con las flechas, no con Tab: figuran como "no alcanzables con Tab" a título informativo.
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -66,6 +69,19 @@ await page.goto(url, { waitUntil: 'networkidle' })
 const png = join(out, `${name}.png`)
 if (crop && selector !== 'body') await page.locator(selector).first().screenshot({ path: png })
 else await page.screenshot({ path: png, fullPage: true })
+
+// Árbol de accesibilidad: lo que encuentra un lector de pantalla (rol, nombre accesible, estado y orden). Sirve para
+// comprobar el contrato semántico de ux.md. Requiere Playwright 1.49 o posterior.
+let aria = null
+try {
+  aria = await page.locator(selector).first().ariaSnapshot()
+} catch (e) {
+  console.error(`Aviso: no se pudo leer el árbol de accesibilidad (${e.message.split('\n')[0]})`)
+}
+const ROLES_CON_NOMBRE = 'button|link|textbox|searchbox|checkbox|radio|switch|combobox|tab|menuitem|option|slider|spinbutton'
+const sinNombre = aria
+  ? aria.split('\n').filter((l) => new RegExp(`^\\s*- (${ROLES_CON_NOMBRE})(\\s*\\[[^\\]]*\\])*\\s*:?\\s*$`).test(l)).map((l) => l.trim())
+  : []
 
 // ---------------------------------------------------------------------------------------------------------------------
 // 1. Medición en la página
@@ -539,7 +555,10 @@ medidas.foco = foco
 // ---------------------------------------------------------------------------------------------------------------------
 const paresNoTexto = medidas._paresNoTexto
 delete medidas._paresNoTexto
+medidas.resumen.controlesSinNombreAccesible = aria ? sinNombre.length : null
+medidas.controlesSinNombreAccesible = sinNombre
 writeFileSync(join(out, `${name}.medidas.json`), JSON.stringify(medidas, null, 2))
+if (aria) writeFileSync(join(out, `${name}.aria.yml`), aria + '\n')
 
 const pares = []
 const noComprobables = []
@@ -578,6 +597,10 @@ if (focoResumen) {
   console.log(`  foco:    ${focoResumen.alcanzadosConTab} con Tab, sin indicador: ${focoResumen.sinIndicadorDeFoco}, aro bajo 3:1: ${focoResumen.aroBajo3}, no alcanzables con Tab: ${focoResumen.noAlcanzablesConTab}`)
 }
 console.log(`  desborde horizontal: ${r.desbordeHorizontal ? 'SÍ' : 'no'}`)
+console.log(aria
+  ? `  semántica: árbol en ${join(out, `${name}.aria.yml`)}, controles sin nombre accesible: ${sinNombre.length}`
+  : '  semántica: no comprobable (Playwright sin ariaSnapshot)')
+for (const l of sinNombre.slice(0, 10)) console.log(`  ! sin nombre accesible: ${l}`)
 console.log(`  contraste: ${pares.length} pares (python .../contrast.py --json ${join(out, `${name}.contraste.json`)}), no comprobables: ${noComprobables.length}`)
 for (const t of medidas.textoBajoPiso.slice(0, 10)) console.log(`  ! texto ${t.fontSizePx}px: ${t.el}`)
 for (const t of medidas.targetsBajoPiso.slice(0, 10)) console.log(`  ! target ${t.anchoPx}x${t.altoPx}px: ${t.el}`)
@@ -589,5 +612,6 @@ const falla =
   r.targetsBajoPiso > 0 ||
   r.desbordeHorizontal ||
   r.noTextoBajo3 > 0 ||
+  sinNombre.length > 0 ||
   (focoResumen && (focoResumen.sinIndicadorDeFoco > 0 || focoResumen.aroBajo3 > 0))
 if (strict && falla) process.exit(1)

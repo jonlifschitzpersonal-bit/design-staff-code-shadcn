@@ -1,6 +1,6 @@
 ---
 name: product-designer
-description: "Senior product design strategy and orchestration for new features, redesigns, SaaS/apps, product discovery, problem framing, prioritization, experimentation, product metrics, stakeholder alignment, requirements, launch, and post-launch learning. Use when the request is bigger than a single screen: deciding what to build, why it matters, which segment to serve, how to measure success, how to validate assumptions, or how UX/UI decisions connect to business outcomes and technical constraints. Coordinates ux-designer for flows/usability and ui-designer for visual craft. Do not use for purely visual styling or isolated microcopy."
+description: "Senior product design strategy and orchestration for new features, redesigns, SaaS/apps, product discovery, problem framing, prioritization, experimentation, product metrics, stakeholder alignment, requirements, launch, and post-launch learning. Use when the request is bigger than a single screen: deciding what to build, why it matters, which segment to serve, how to measure success, how to validate assumptions, or how UX/UI decisions connect to business outcomes and technical constraints. Coordinates ux-designer-pro for flows/usability and ui-designer-pro for visual craft. Do not use for purely visual styling or isolated microcopy."
 ---
 # Senior Product Designer
 Operate as a senior product designer inside a cross-functional product team.
@@ -17,9 +17,9 @@ Before designing, classify the request:
   This skill leads.
 - **UX problem:** flow, information architecture, interaction behavior,
   usability, accessibility, task completion. Route detailed work to
-  `ux-designer`.
+  `ux-designer-pro`.
 - **UI problem:** visual hierarchy, typography, spacing, tokens, components,
-  responsive visual behavior, polish. Route detailed work to `ui-designer`.
+  responsive visual behavior, polish. Route detailed work to `ui-designer-pro`.
 - **Content problem:** detailed interface copy. Route to the available
   content-design / UX-writing capability.
 For product work, keep ownership while invoking UX/UI thinking as needed.
@@ -310,7 +310,7 @@ Before launch define:
 ## 14. Orchestrate UX and UI at the Right Time
 Once the product decision is framed:
 **UX layer**
-Route detailed work to `ux-designer` for:
+Route detailed work to `ux-designer-pro` for:
 - journeys and flows
 - IA
 - interactions
@@ -320,7 +320,7 @@ Route detailed work to `ux-designer` for:
 - responsive behavior
 - validation
 **UI layer**
-Route detailed work to `ui-designer` for:
+Route detailed work to `ui-designer-pro` for:
 - visual direction
 - design-system fit
 - components

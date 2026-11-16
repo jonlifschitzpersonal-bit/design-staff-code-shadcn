@@ -17,16 +17,19 @@ por la imagen. Si falta algo, decí qué no pudiste comprobar y seguí.
 ## Qué revisás
 
 Leé primero las capturas y el brief, antes que los racionales. Usá como criterio los checklists de revisión de
-`${CLAUDE_PLUGIN_ROOT}/skills/ux-designer/SKILL.md`, `${CLAUDE_PLUGIN_ROOT}/skills/ui-designer/SKILL.md` y
-`${CLAUDE_PLUGIN_ROOT}/skills/ux-writing/SKILL.md` (no hace falta leerlos completos).
+`${CLAUDE_PLUGIN_ROOT}/skills/ux-designer-pro/SKILL.md` (§19), `${CLAUDE_PLUGIN_ROOT}/skills/ui-designer-pro/SKILL.md`
+(§19 y §20) y `${CLAUDE_PLUGIN_ROOT}/skills/ux-writing/SKILL.md` (no hace falta leerlos completos).
 
 - **Problema:** ¿resuelve el problema del brief para ese usuario? ¿Respeta las reglas que no se rompen?
 - **Flujo y estados:** camino principal, casos fuera de ruta, recuperación de errores, estados vacío, carga y error.
 - **Copy:** botones que nombran su acción, errores con salida, términos consistentes, nada de jerga interna, nada que
   prometa más de lo que el producto sostiene.
-- **Visual:** jerarquía (un peso o un color que se repite en todo no jerarquiza), roles de componentes distinguibles,
-  espaciado y alineación con contenido variable, repeticiones que ensucian.
-- **Accesibilidad:** lo que dice la medición, más lo que no depende del color.
+- **Visual:** jerarquía (un peso o un color que se repite en todo no jerarquiza), colisiones semánticas (significados
+  distintos con el mismo color, forma y relleno), exceso de pills, énfasis que no corresponde al rango de la acción,
+  roles de componentes distinguibles, espaciado y alineación con contenido variable, repeticiones que ensucian.
+- **Accesibilidad:** lo que dice la medición, lo que no depende del color, y si `<name>.aria.yml` coincide con el
+  contrato semántico de `ux.md`.
+- **Correcciones:** si es una segunda pasada, ¿cada corrección quedó al nivel de severidad de su hallazgo?
 
 Probá cada regla que no se rompe con un escenario adversarial propio: una interrupción, un error de conexión, un dato
 inesperado. Podés citar una ley de `${CLAUDE_PLUGIN_ROOT}/knowledge/LAWS_OF_UX.md` solo si explica un hallazgo concreto.

@@ -3,7 +3,7 @@
 The 30 principles catalogued at https://lawsofux.com/ (list verified 2026-10-27), rewritten for decision-making.
 Read when a design decision, critique, or trade-off could be explained or challenged by one of them. For how the
 most common ones collide in practice (Hick vs. control, Jakob vs. bad conventions, peak-end), see
-[psychology-deep-dive.md](../skills/ux-designer/references/psychology-deep-dive.md) (`ux-designer` skill) — this
+[psychology-deep-dive.md](../skills/ux-designer-pro/references/psychology-deep-dive.md) (`ux-designer-pro` skill) — this
 file does not repeat those worked conflicts.
 
 Each entry: **what it says** · **apply** · **breaks when** · **critique signal** · **source** · **evidence**.

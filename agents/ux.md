@@ -8,13 +8,14 @@ orden, todos sus estados y el texto. No decidís el aspecto visual ni escribís 
 
 ## Lecturas (completas, antes de empezar)
 
-1. `${CLAUDE_PLUGIN_ROOT}/skills/ux-designer/SKILL.md` y su `references/patterns-and-flows.md`.
+1. `${CLAUDE_PLUGIN_ROOT}/skills/ux-designer-pro/SKILL.md`, con sus referencias `patterns-and-flows.md` y
+   `semantic-accessibility-contract.md`.
 2. `${CLAUDE_PLUGIN_ROOT}/skills/ux-writing/SKILL.md`, antes de escribir el copy.
 3. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/harden.md`: estados y casos límite (ignorá el CSS y los comandos).
 4. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/clarify.md`: revisión del copy (ignorá los comandos).
 5. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/onboard.md`, solo si es una primera experiencia o un estado vacío.
 
-A demanda: `references/psychology-deep-dive.md` de ux-designer si dos principios chocan, y
+A demanda: `references/psychology-deep-dive.md` de ux-designer-pro si dos principios chocan, y
 `${CLAUDE_PLUGIN_ROOT}/knowledge/LAWS_OF_UX.md` si una ley explica o cuestiona una decisión (respetá su nivel de
 evidencia).
 
@@ -29,8 +30,12 @@ evidencia).
 4. Definí los estados con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
    conexión, permisos y validación, otro idioma (+30%), formatos de fecha y número. Más carga, éxito y foco.
 5. Escribí el copy con ux-writing y revisalo con `clarify`.
-6. Repasá todo con el checklist de revisión de ux-designer y el de ux-writing. Corregí lo que falle.
-7. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
+6. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
+   accesible, estado, agrupación, orden de lectura, foco y anuncios. Lo que ya resuelve un componente de la librería va
+   como «hereda de <componente>». En un compuesto (fila, tarjeta, segmentado), decidí si es una sola unidad o varios
+   controles.
+7. Repasá todo con el checklist de revisión de ux-designer-pro y el de ux-writing. Corregí lo que falle.
+8. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
 
 ## Reglas
 

@@ -37,12 +37,16 @@ desborde horizontal) y genera junto a la captura:
 - `<name>.png`: captura a 2x de página completa (o recortada con `--selector "<css>" --crop`);
 - `<name>.medidas.json`: el detalle de cada texto y control. Abrilo solo para lo que el resumen marca como falla;
 - `<name>.contraste.json`: pares de color para `contrast.py`;
-- `<name>.contraste-no-comprobable.json`, si existe: textos sobre imagen o degradado, que quedan **no comprobables**.
+- `<name>.contraste-no-comprobable.json`, si existe: textos sobre imagen o degradado, que quedan **no comprobables**;
+- `<name>.aria.yml`: el árbol de accesibilidad (rol, nombre accesible, estado y orden), para compararlo con el contrato
+  semántico de `ux.md`. Un control sin nombre accesible es una falla con `--strict`. Requiere Playwright 1.49 o
+  posterior.
 
 `--strict` sale con código 1 si algo queda bajo los pisos. Después de medir, **mirá la captura** con `Read`: la medición
 dice si cumple, no si se ve bien.
 
-**No mide:** hover, estados que la página no carga por URL, lector de pantalla, orden real de lectura, zoom del sistema,
+**No mide:** hover, estados que la página no carga por URL, la lectura real con un lector de pantalla (anuncios y
+movimiento del foco después de una acción), zoom del sistema,
 dispositivos reales, animaciones y contraste sobre imágenes. Eso se dice como no comprobable.
 
 ## 4. Para la revisión

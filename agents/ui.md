@@ -8,9 +8,13 @@ componentes del proyecto, y lo que cuenta como medido es lo que calcula el naveg
 
 ## Lecturas (completas, antes de dibujar)
 
-1. `${CLAUDE_PLUGIN_ROOT}/skills/ui-designer/SKILL.md` y su `references/polish-and-craft.md`. Detectá el modo (A sin
-   sistema, B sistema existente, C extensión). En el modo A, leé también `aesthetic-derivation.md`, `design-tokens.md` y
-   `component-library.md`. Con una librería adoptada, el modo es B.
+1. `${CLAUDE_PLUGIN_ROOT}/skills/ui-designer-pro/SKILL.md` y sus referencias `visual-semantics.md`, `visual-qa.md` y
+   `polish-and-craft.md`. Detectá el modo (greenfield, sistema existente o extensión; con una librería adoptada, es
+   sistema existente). Según la tarea, leé también:
+   - tablas, dashboards o pantallas densas: `information-design.md`;
+   - greenfield o dirección visual nueva: `aesthetic-derivation.md`, `art-direction-and-graphic-design.md`,
+     `design-tokens.md` y `component-library.md`;
+   - fotos, ilustraciones o íconos que no vienen con la librería: `asset-library-map.md`.
 2. `${CLAUDE_PLUGIN_ROOT}/skills/design-accessibility/SKILL.md`.
 3. `${CLAUDE_PLUGIN_ROOT}/knowledge/SUPERFICIE_CODIGO.md`: cómo se dibuja y se mide en código.
 4. `${CLAUDE_PLUGIN_ROOT}/knowledge/RECETAS_LIBRERIAS.md`, si el proyecto usa una librería de componentes.
@@ -22,20 +26,26 @@ componentes del proyecto, y lo que cuenta como medido es lo que calcula el naveg
 ## Qué hacés
 
 1. Leé `design/<slug>/brief.md`, `design/<slug>/ux.md` y el código actual.
-2. Definí la dirección visual en pocas líneas: escala tipográfica y pesos, espaciado, y cómo se distingue cada rol
-   (acción, filtro, navegación, estado). Si el proyecto ya tiene sistema, seguilo.
+2. Hacé el inventario de roles visuales (§2 de ui-designer-pro) y definí la dirección en pocas líneas: escala
+   tipográfica y pesos, espaciado, la escalera de énfasis de las acciones y cómo se distingue cada familia (acción,
+   filtro, navegación, estado, severidad, metadato). Si el proyecto ya tiene sistema, seguilo.
 3. Construí la pantalla:
    - cada estado de `ux.md` abrible por URL;
    - datos de muestra realistas, con los casos difíciles (el nombre más largo, el monto más alto);
    - solo tokens y la escala del tema; nada de valores sueltos en la pantalla. Si falta un token, va a la capa de tema;
    - los pisos de texto y de target se corrigen una sola vez, en la capa de tema;
-   - lo que la librería ya trae no se reinventa.
+   - lo que la librería ya trae no se reinventa;
+   - el contrato semántico de `ux.md` se respeta: rol, nombre, estado, agrupación, orden y foco. Una decisión visual no
+     puede partir una unidad, fusionar controles independientes ni anidar acciones.
 4. Medí con `tools/medir.mjs` cada estado en cada viewport del proyecto (y en modo oscuro si el producto lo tiene), y
    corré `contrast.py` sobre cada `.contraste.json`. Leé el resumen que imprime; abrí el JSON solo para lo que falla.
+   Compará `<name>.aria.yml` con el contrato semántico de `ux.md`: roles, nombres, estados y orden.
 5. Mirá cada captura con `Read`. La medición dice si cumple, no si se ve bien.
-6. Pasada visual, una vez, sobre las capturas: `critique` (Assessment A), `distill` en cada familia de pantallas, el
-   checklist de revisión de ui-designer y los criterios de design-accessibility. Corregí lo que falle, volvé a medir y
-   sacá capturas nuevas. Si un cambio solo aporta simetría y separa lo relacionado, revertilo.
+6. Pasada visual, una vez, sobre las capturas: la QA visual obligatoria (§19 de ui-designer-pro y `visual-qa.md`:
+   colisión semántica, saliencia, pills, énfasis y ejes, jerarquía), `critique` (Assessment A), `distill` en cada
+   familia de pantallas y los criterios de design-accessibility. Cada corrección va al nivel de severidad de su
+   hallazgo. Corregí lo que falle, volvé a medir y sacá capturas nuevas; si un arreglo rompió algo al lado, también es
+   parte del trabajo. Si un cambio solo aporta simetría y separa lo relacionado, revertilo.
 7. `npm run build` (o el del proyecto) tiene que terminar sin errores.
 
 ## Reglas

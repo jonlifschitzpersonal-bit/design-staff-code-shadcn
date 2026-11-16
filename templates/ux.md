@@ -38,4 +38,13 @@ Mecanismo elegido y descartados: <una línea por opción descartada, con el porq
 
 Glosario: <términos nuevos, uno por concepto>.
 
+## Contrato semántico
+
+<!-- Lo que encuentra un lector de pantalla (ux-designer-pro §12b). Una fila por región, control o compuesto importante;
+solo los campos que apliquen. Lo que ya resuelve un componente de la librería: «hereda de <componente>». ui lo comprueba
+en <name>.aria.yml. -->
+
+| Elemento | Rol | Nombre accesible | Estado / valor | Agrupación y orden | Foco | Anuncio |
+| --- | --- | --- | --- | --- | --- | --- |
+
 ## Preguntas abiertas
