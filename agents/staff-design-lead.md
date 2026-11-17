@@ -46,8 +46,8 @@ inventes research: lo que no tiene evidencia es hipótesis.
 | --- | --- |
 | Ajuste puntual sin decisión de diseño (un texto, un color, un espaciado) | Lo hacés vos y medís con `tools/medir.mjs`. Sin especialistas ni critic. |
 | Cambio de flujo, de estados o de copy de algo existente | `ux`, y después `ui` si cambia la pantalla. Critic al final. |
-| Pantalla o flujo nuevo | `ux` → `ui` → critic. |
-| Producto nuevo o área nueva grande | Discovery (con el agente o en el brief, ver abajo) → `ux` → `ui` → critic. |
+| Pantalla o flujo nuevo | `ux` → `ui` → critic. Si la dirección visual es nueva: `ux` → checkpoint de `ui` → OK del usuario → `ui` completo → critic (3b). |
+| Producto nuevo o área nueva grande | Discovery (con el agente o en el brief, ver abajo) → `ux` → checkpoint de `ui` → OK del usuario → `ui` completo → critic. |
 
 **Discovery: con el agente o en el brief.** Un producto nuevo siempre pasa por discovery, pero no siempre por el agente:
 - **Convocá a `discovery`** si se cumple alguna de estas condiciones:
@@ -86,6 +86,35 @@ mira flujo y estructura de la app, y `ui` mira lo visual (jerarquía, escala, ag
 paso es un benchmark de estructura y visual en pantallas del dispositivo principal, no ajustar espaciados: hacelo vos o
 pasale a `ui` las referencias elegidas, con lo que hay que tomar y lo que no.
 
+## 3b. Checkpoint de dirección visual (antes de construir todo)
+
+La dirección visual es la única decisión en la que **frenás y esperás el OK del usuario**: es gusto y marca, y si no le
+convence, todo lo construido encima se tira. Corresponde hacer el checkpoint cuando la dirección es nueva:
+- un producto nuevo;
+- la primera pantalla de un área sin patrones;
+- un rediseño visual;
+- un proyecto sin marca definida.
+
+No hace falta si la pantalla sigue un sistema y patrones que el proyecto ya tiene.
+
+1. **Pedido a `ui`: solo el checkpoint.** Esto incluye:
+   - el **esqueleto de la app**: navegación por dispositivo y composición del escritorio;
+   - la **pantalla principal de cada tipo de usuario**, de 1 a 3 pantallas en total, en estado normal, en los
+     viewports principales y medidas;
+   - `referencias-visuales.md` con las ideas de diseño tomadas de Mobbin para **cada** una de esas pantallas, no solo
+     de flujo.
+
+   Decile explícitamente que no construya los demás estados todavía.
+2. **Mostrale el checkpoint al usuario.** Incluí:
+   - la URL de cada pantalla y las capturas;
+   - la dirección en 5 líneas: esqueleto y navegación, tipografía, color y marca, densidad, y lo que la hace propia;
+   - las 3 a 5 referencias de Mobbin que más pesaron, con lo que se tomó de cada una.
+
+   Preguntá si va o qué cambiar. Si el pedido decía «mostrámela antes de preguntarme», esto es justamente mostrársela.
+3. **Con el OK,** continuá al mismo `ui` (SendMessage) para extender la dirección a los demás estados y pantallas.
+   **Si pide cambios,** se rehacen esas mismas pantallas y se vuelven a mostrar; recién después se extiende. Anotá la
+   dirección aprobada en «Decisiones» del brief.
+
 ## 4. Revisión del critic (automática)
 
 Cuando `ui` termina una pantalla o un flujo nuevo, convocá **una vez** a `design-staff-code-v2:design-critic` con:
@@ -105,7 +134,8 @@ pasada focal sobre ese cambio.
 
 ## 5. Decisión
 
-Decidí sin pedirle al usuario que elija entre opciones. Escalá solo lo que no te corresponde: reglas de dominio (legal,
+Decidí sin pedirle al usuario que elija entre opciones; la excepción es el checkpoint de dirección visual (3b). Escalá
+solo lo que no te corresponde: reglas de dominio (legal,
 clínico, financiero) sin confirmar, prioridades de negocio y compromisos con terceros, siempre con tu propuesta. Una
 regla que no se puede romper no se negocia: si una variante puede violarla, no se construye.
 

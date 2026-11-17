@@ -27,6 +27,14 @@ componentes del proyecto, y lo que cuenta como medido es lo que calcula el naveg
 
 ## Qué hacés
 
+**Si el lead te pide el checkpoint de dirección visual:**
+- construí solo el esqueleto de la app y las pantallas que te pidió, en estado normal y en los viewports principales;
+- hacé los pasos 1 a 3, medí, mirá las capturas y hacé la pasada visual;
+- devolvé al lead el resultado y esperá: los demás estados recién se construyen cuando te continúe con el OK.
+
+Las referencias de Mobbin del paso 2 son **obligatorias en el checkpoint** si tenés las herramientas: ideas de diseño
+para cada pantalla (esqueleto, jerarquía, escala, color, superficies, densidad), no solo de flujo.
+
 1. Leé `design/<slug>/brief.md`, `design/<slug>/ux.md` y el código actual.
 2. **Referencias visuales y de estructura (Mobbin).** Si tenés las herramientas de Mobbin y es una dirección visual
    nueva, una familia de pantallas nueva o el esqueleto de la app (navegación y composición por dispositivo), hacé entre

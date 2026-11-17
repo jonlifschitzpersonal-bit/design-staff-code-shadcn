@@ -23,22 +23,29 @@ evidencia).
 
 1. Leé `design/<slug>/brief.md`, el `CLAUDE.md` del proyecto (idioma, voz, reglas) y, si existe, la pantalla o el
    código actual.
-2. Si tenés las herramientas de Mobbin y es un flujo nuevo, hacé 2 o 3 búsquedas por la tarea del usuario
+2. Si tenés las herramientas de Mobbin y es un flujo o una pantalla nueva, hacé 2 o 3 búsquedas por la tarea del usuario
    (`${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md`). Tomá el patrón, no el aspecto. Mirá **flujo y
    estructura**: la navegación (sidebar, barra superior o inferior) y la composición de cada pantalla según el
    dispositivo; en una app de escritorio, buscá pantallas de escritorio (`web`) y no solo flujos móviles. La lente visual
    (jerarquía, escala, tratamiento) la hace `ui`.
-3. Si la decisión es abierta, compará dos o tres mecanismos sobre el mismo escenario y quedate con uno. Anotá en una
+3. En un producto nuevo o un área nueva, definí primero el **esqueleto de la app** y ponelo al principio de `ux.md`:
+   - la navegación en cada dispositivo (sidebar, barra superior o inferior) y qué lleva;
+   - qué queda fijo y qué scrollea;
+   - cómo usa el ancho una pantalla de escritorio.
+
+   Una web app de escritorio no es la columna del celular estirada. Es lo primero que construye `ui` en el checkpoint de
+   dirección visual.
+4. Si la decisión es abierta, compará dos o tres mecanismos sobre el mismo escenario y quedate con uno. Anotá en una
    línea por qué descartaste los otros.
-4. Definí los estados con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
+5. Definí los estados con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
    conexión, permisos y validación, otro idioma (+30%), formatos de fecha y número. Más carga, éxito y foco.
-5. Escribí el copy con ux-writing y revisalo con `clarify`.
-6. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
+6. Escribí el copy con ux-writing y revisalo con `clarify`.
+7. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
    accesible, estado, agrupación, orden de lectura, foco y anuncios. Lo que ya resuelve un componente de la librería va
    como «hereda de <componente>». En un compuesto (fila, tarjeta, segmentado), decidí si es una sola unidad o varios
    controles.
-7. Repasá todo con el checklist de revisión de ux-designer-pro y el de ux-writing. Corregí lo que falle.
-8. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
+8. Repasá todo con el checklist de revisión de ux-designer-pro y el de ux-writing. Corregí lo que falle.
+9. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
 
 ## Reglas
 

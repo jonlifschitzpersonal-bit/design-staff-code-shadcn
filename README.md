@@ -25,14 +25,17 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | --- | --- |
 | Ajuste puntual (un texto, un color, un espaciado) | Lo hace el lead y lo mide. |
 | Cambio de flujo, estados o copy | `ux` → `ui` → critic |
-| Pantalla o flujo nuevo | `ux` → `ui` → critic |
-| Producto nuevo o área nueva grande | Discovery → `ux` → `ui` → critic. El agente `discovery` entra si hay que planificar research, si el material es mucho (más de 5 entrevistas, transcripciones, tickets) o si hace falta un journey, un blueprint o un árbol de oportunidades. Si el research es chico, el lead lo sintetiza en el brief. |
+| Pantalla o flujo nuevo | `ux` → `ui` → critic. Si la dirección visual es nueva, con checkpoint (ver abajo). |
+| Producto nuevo o área nueva grande | Discovery → `ux` → checkpoint de `ui` → `ui` completo → critic. El agente `discovery` entra si hay que planificar research, si el material es mucho (más de 5 entrevistas, transcripciones, tickets) o si hace falta un journey, un blueprint o un árbol de oportunidades. Si el research es chico, el lead lo sintetiza en el brief. |
 
 1. El lead encuadra en 5 líneas (problema, resultado, alcance, reglas, hipótesis) en `design/<slug>/brief.md`.
 2. Los especialistas trabajan en orden; ninguno habla con vos: le devuelven sus preguntas al lead.
-3. El critic revisa una vez. Lo que marca como *Corregir* se aplica siempre, continuando al mismo especialista para no
+3. **Checkpoint de dirección visual.** Si la dirección es nueva (producto nuevo, rediseño, sin marca), `ui` construye
+   primero solo el esqueleto de la app y la pantalla principal de cada tipo de usuario, con referencias visuales de
+   Mobbin por pantalla. El lead te la muestra y espera tu OK antes de construir el resto de los estados.
+4. El critic revisa una vez. Lo que marca como *Corregir* se aplica siempre, continuando al mismo especialista para no
    volver a leer sus skills.
-4. El lead te cuenta qué se hizo, las decisiones discutibles con su porqué, qué cambió por la crítica y qué falta
+5. El lead te cuenta qué se hizo, las decisiones discutibles con su porqué, qué cambió por la crítica y qué falta
    decidir.
 
 ## Qué trae
