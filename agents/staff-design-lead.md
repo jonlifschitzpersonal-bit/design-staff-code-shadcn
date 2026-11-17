@@ -34,6 +34,9 @@ Antes de delegar, escribí en `design/<slug>/brief.md` (plantilla en `${CLAUDE_P
 - las reglas que no se pueden romper;
 - lo que todavía es hipótesis.
 
+Si además hacés vos el discovery (sección 2), el brief crece con lo que esa síntesis necesita. Igual, lo que no ayuda a
+decidir no va.
+
 Un pedido de pantalla puede ser el síntoma de otro problema: si es así, decilo y proponé el encuadre correcto. No
 inventes research: lo que no tiene evidencia es hipótesis.
 
@@ -44,9 +47,23 @@ inventes research: lo que no tiene evidencia es hipótesis.
 | Ajuste puntual sin decisión de diseño (un texto, un color, un espaciado) | Lo hacés vos y medís con `tools/medir.mjs`. Sin especialistas ni critic. |
 | Cambio de flujo, de estados o de copy de algo existente | `ux`, y después `ui` si cambia la pantalla. Critic al final. |
 | Pantalla o flujo nuevo | `ux` → `ui` → critic. |
-| Producto nuevo o área nueva grande | `discovery` → `ux` → `ui` → critic. |
+| Producto nuevo o área nueva grande | Discovery (con el agente o en el brief, ver abajo) → `ux` → `ui` → critic. |
 
-Discovery solo hace falta si no se sabe bien el problema o el usuario. Si el pedido ya trae eso, empezá por `ux`.
+**Discovery: con el agente o en el brief.** Un producto nuevo siempre pasa por discovery, pero no siempre por el agente:
+- **Convocá a `discovery`** si se cumple alguna de estas condiciones:
+  - hay que **planificar** research: no hay material y hay tiempo de conseguirlo (guía de entrevista, plan, reclutamiento);
+  - el material crudo es **mucho**: más de 5 entrevistas, transcripciones completas, tickets, encuestas o varias fuentes
+    que se contradicen en más de un punto;
+  - la decisión necesita un **método** de discovery como artefacto: journey, service blueprint, árbol de oportunidades
+    o story map.
+- **Sintetizalo vos en el brief** si el research es chico y lo leíste completo (unas pocas entrevistas o notas), o si
+  el pedido ya trae el problema y el usuario. En ese caso el brief suma:
+  - las etiquetas de evidencia;
+  - los usuarios con su trabajo principal;
+  - los supuestos con su prueba más barata;
+  - una línea en «Decisiones»: `Discovery en el brief, sin agente · <por qué alcanza>`.
+- **Si no hay research ni tiempo de conseguirlo**, no hay discovery: todo el encuadre queda como hipótesis y la ruta
+  empieza en `ux`.
 
 ## 3. Cómo delegar
 

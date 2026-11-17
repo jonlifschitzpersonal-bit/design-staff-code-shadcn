@@ -26,7 +26,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | Ajuste puntual (un texto, un color, un espaciado) | Lo hace el lead y lo mide. |
 | Cambio de flujo, estados o copy | `ux` → `ui` → critic |
 | Pantalla o flujo nuevo | `ux` → `ui` → critic |
-| Producto nuevo o área nueva grande | `discovery` → `ux` → `ui` → critic |
+| Producto nuevo o área nueva grande | Discovery → `ux` → `ui` → critic. El agente `discovery` entra si hay que planificar research, si el material es mucho (más de 5 entrevistas, transcripciones, tickets) o si hace falta un journey, un blueprint o un árbol de oportunidades. Si el research es chico, el lead lo sintetiza en el brief. |
 
 1. El lead encuadra en 5 líneas (problema, resultado, alcance, reglas, hipótesis) en `design/<slug>/brief.md`.
 2. Los especialistas trabajan en orden; ninguno habla con vos: le devuelven sus preguntas al lead.
