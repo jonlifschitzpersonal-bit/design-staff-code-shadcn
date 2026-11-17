@@ -46,7 +46,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `knowledge/SUPERFICIE_CODIGO.md` | Cómo se dibuja y se mide en código. |
 | `knowledge/RECETAS_LIBRERIAS.md` | Cómo adoptar una librería sin que sus valores por defecto rompan los pisos. |
 | `knowledge/LAWS_OF_UX.md` | Leyes de UX con su nivel de evidencia, para consultar a demanda. |
-| `knowledge/REFERENCIAS_MOBBIN.md` | Cómo buscar referencias en el MCP de Mobbin, si está instalado. |
+| `knowledge/REFERENCIAS_MOBBIN.md` | Cómo buscar referencias en el MCP de Mobbin, si está instalado: flujo (`ux`), estructura de la app y visual (`ui`, que deja `referencias-visuales.md`). |
 | `templates/brief.md`, `templates/ux.md` | Los dos documentos de cada iniciativa. |
 | `templates/project/tools/medir.mjs` | Playwright: captura y mide texto, targets, contraste, foco y árbol de accesibilidad en el DOM real. |
 | `templates/librerias/heroui/` | Banco de medición y capa de pisos para HeroUI v3. |

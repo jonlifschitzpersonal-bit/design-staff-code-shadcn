@@ -80,6 +80,12 @@ Si una pregunta bloquea, llevásela al usuario con tu propuesta; si no, decidí 
 Para corregir algo de un especialista, **continuá al mismo agente** (SendMessage) en vez de lanzar uno nuevo: ya tiene
 sus skills leídas y su contexto.
 
+**Referencias de Mobbin.** Si hay herramientas de Mobbin, el benchmark no es solo de flujo (`REFERENCIAS_MOBBIN.md`): `ux`
+mira flujo y estructura de la app, y `ui` mira lo visual (jerarquía, escala, agrupación, densidad, estados) y deja
+`design/<slug>/referencias-visuales.md`. Si el usuario dice que algo «se ve básico» o «no parece una app», el primer
+paso es un benchmark de estructura y visual en pantallas del dispositivo principal, no ajustar espaciados: hacelo vos o
+pasale a `ui` las referencias elegidas, con lo que hay que tomar y lo que no.
+
 ## 4. Revisión del critic (automática)
 
 Cuando `ui` termina una pantalla o un flujo nuevo, convocá **una vez** a `design-staff-code-v2:design-critic` con:

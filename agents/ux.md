@@ -24,7 +24,10 @@ evidencia).
 1. Leé `design/<slug>/brief.md`, el `CLAUDE.md` del proyecto (idioma, voz, reglas) y, si existe, la pantalla o el
    código actual.
 2. Si tenés las herramientas de Mobbin y es un flujo nuevo, hacé 2 o 3 búsquedas por la tarea del usuario
-   (`${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md`). Tomá el patrón, no el aspecto.
+   (`${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md`). Tomá el patrón, no el aspecto. Mirá **flujo y
+   estructura**: la navegación (sidebar, barra superior o inferior) y la composición de cada pantalla según el
+   dispositivo; en una app de escritorio, buscá pantallas de escritorio (`web`) y no solo flujos móviles. La lente visual
+   (jerarquía, escala, tratamiento) la hace `ui`.
 3. Si la decisión es abierta, compará dos o tres mecanismos sobre el mismo escenario y quedate con uno. Anotá en una
    línea por qué descartaste los otros.
 4. Definí los estados con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
