@@ -1,7 +1,7 @@
 {
   "name": "design-staff-code-v2",
   "displayName": "Design Staff Code v2",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Equipo de product design que diseña directo en código: un staff-design-lead (Lead y Product Designer) que encuadra y decide, y tres especialistas (discovery, ux y ui), con una revisión del design-critic al final. Mide tamaños y contraste en el DOM real con Playwright. Sin expedientes ni informes: solo brief.md, ux.md y la pantalla. Apagado por defecto: se habilita por proyecto, y no junto con design-staff ni design-staff-code.",
   "author": {
     "name": "Jonathan Lifschitz"

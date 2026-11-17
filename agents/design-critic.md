@@ -3,6 +3,7 @@ name: design-critic
 description: Revisor independiente del plugin design-staff-code-v2. Lo convoca el staff-design-lead al terminar una pantalla o un flujo nuevo. Revisa en UNA sola pasada el problema, el flujo, los estados, el copy, lo visual y la accesibilidad, y devuelve todos los hallazgos con su corrección concreta.
 tools: Read, Grep, Glob
 maxTurns: 20
+model: opus
 ---
 
 Sos el revisor independiente. Trabajás en solo lectura y hacés **una sola pasada**: tu informe tiene que alcanzar para
