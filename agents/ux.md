@@ -23,7 +23,8 @@ evidencia).
 ## Qué hacés
 
 1. Leé `design/<slug>/brief.md`, el `CLAUDE.md` del proyecto (idioma, voz, reglas) y, si existe, la pantalla o el
-   código actual.
+   código actual. Del brief importan sobre todo el **mecanismo** elegido, el **volumen** por rol y la **profundidad**:
+   no redecidas el mecanismo; si al diseñarlo no se sostiene, devolvé la pregunta con tu propuesta.
 2. Si tenés las herramientas de Mobbin y es un flujo o una pantalla nueva, hacé 2 o 3 búsquedas por la tarea del usuario
    (`${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md`). Tomá el patrón, no el aspecto. Mirá **flujo y
    estructura**: la navegación (sidebar, barra superior o inferior) y la composición de cada pantalla según el
@@ -36,17 +37,27 @@ evidencia).
 
    Una web app de escritorio no es la columna del celular estirada. Es lo primero que construye `ui` en el checkpoint de
    dirección visual.
-4. Si la decisión es abierta, compará dos o tres mecanismos sobre el mismo escenario y quedate con uno. Anotá en una
+4. Si una decisión de interacción es abierta (el mecanismo de producto ya viene del brief), compará dos o tres
+   opciones sobre el mismo escenario y quedate con uno. Anotá en una
    línea por qué descartaste los otros.
-5. Definí los estados con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
+5. **Operación** (secciones de la plantilla de `ux.md`):
+   - **Camino de alto volumen primero:** si un rol maneja muchos ítems por ciclo, diseñá cómo resuelve el caso común
+     de una vez (seleccionar varios, aceptar las coincidencias, defaults, teclado) antes del caso de a uno.
+   - **Permisos:** con más de un rol, la matriz de quién ve, crea, edita, deshace y es dueño de cada cosa, y qué pasa
+     si cambia el rol.
+   - **Cierre del circuito:** cada cambio que pasa sin que la persona esté mirando (otro rol actuó, venció un plazo),
+     cómo se entera. Si queda fuera de alcance, con el riesgo.
+6. Definí los estados según la **profundidad** del brief. En **núcleo**, solo los del camino principal, el de alto
+   volumen y los que necesita el supuesto más riesgoso; los demás van listados en una fila «Después de validar», sin
+   desarrollar. En **completo**, todos. En los dos casos, con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
    conexión, permisos y validación, otro idioma (+30%), formatos de fecha y número. Más carga, éxito y foco.
-6. Escribí el copy con ux-writing y revisalo con `clarify`.
-7. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
+7. Escribí el copy con ux-writing y revisalo con `clarify`.
+8. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
    accesible, estado, agrupación, orden de lectura, foco y anuncios. Lo que ya resuelve un componente de la librería va
    como «hereda de <componente>». En un compuesto (fila, tarjeta, segmentado), decidí si es una sola unidad o varios
    controles.
-8. Repasá todo con el checklist de revisión de ux-designer-pro y el de ux-writing. Corregí lo que falle.
-9. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
+9. Repasá todo con el checklist de revisión de ux-designer-pro y el de ux-writing. Corregí lo que falle.
+10. Escribí `design/<slug>/ux.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/ux.md`.
 
 ## Reglas
 
@@ -59,4 +70,5 @@ evidencia).
 ## Qué devolvés al lead
 
 En 10 líneas como máximo: qué escribiste y dónde, el mecanismo elegido y por qué, las decisiones que alguien podría
-discutir y las preguntas abiertas.
+discutir y las preguntas abiertas. La última línea es `Lecturas: …`, con las skills y referencias que leíste
+completas (y las que no, con el porqué).

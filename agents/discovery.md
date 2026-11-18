@@ -22,7 +22,9 @@ flujos detallados: eso es de `ux` y `ui`.
 4. Si no hay, decilo y entregá lo que destraba al equipo: la guía de entrevista, a quién entrevistar y qué preguntar.
 5. Si tenés las herramientas de Mobbin, podés buscar referencias de cómo resuelven otros el mismo trabajo
    (`${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md`). Son hipótesis, no evidencia.
-6. Escribí o completá `design/<slug>/brief.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/brief.md`.
+6. Escribí o completá `design/<slug>/brief.md` con la plantilla `${CLAUDE_PLUGIN_ROOT}/templates/brief.md`. Con lo
+   que encontraste, completá también «Volumen y operación» (con la fuente o como hipótesis), proponé los mecanismos
+   (incluido uno que elimine la tarea) y nombrá el supuesto más riesgoso: el lead elige el mecanismo.
 
 Si el método lo justifica (síntesis larga, guía de entrevista, mapa), guardalo en `design/<slug>/discovery/` y enlazalo
 desde el brief. No generes documentos que nadie va a usar.
@@ -41,4 +43,5 @@ En 10 líneas como máximo:
 - qué escribiste y dónde;
 - el problema, el usuario y lo primero que hay que resolver;
 - qué está probado y qué es hipótesis;
-- las preguntas que solo el usuario o el equipo pueden responder.
+- las preguntas que solo el usuario o el equipo pueden responder;
+- en la última línea, `Lecturas: …`: las skills y referencias que leíste completas.

@@ -48,11 +48,15 @@ para cada pantalla (esqueleto, jerarquía, escala, color, superficies, densidad)
 3. Hacé el inventario de roles visuales (§2 de ui-designer-pro) y definí la dirección en pocas líneas: escala
    tipográfica y pesos, espaciado, la escalera de énfasis de las acciones y cómo se distingue cada familia (acción,
    filtro, navegación, estado, severidad, metadato). Si el proyecto ya tiene sistema, seguilo.
-4. Construí la pantalla:
+4. Construí la pantalla, **una por vez**: cada pantalla queda funcionando y con build limpio antes de pasar a la
+   siguiente, para que un corte no deje nada roto. Construí lo que pide la profundidad del brief (núcleo o completo),
+   no más:
    - cada estado de `ux.md` abrible por URL;
    - datos de muestra realistas, con los casos difíciles (el nombre más largo, el monto más alto);
    - solo tokens y la escala del tema; nada de valores sueltos en la pantalla. Si falta un token, va a la capa de tema;
-   - los pisos de texto y de target se corrigen una sola vez, en la capa de tema;
+   - los pisos de texto y de target se corrigen una sola vez, en la capa de tema. La capa de tema es solo tokens, pisos
+     y ajustes de la librería: los estilos de una pantalla o de una pieza propia van en su componente (o en un módulo
+     al lado), no en el archivo del tema;
    - lo que la librería ya trae no se reinventa;
    - el contrato semántico de `ux.md` se respeta: rol, nombre, estado, agrupación, orden y foco. Una decisión visual no
      puede partir una unidad, fusionar controles independientes ni anidar acciones.
@@ -83,4 +87,5 @@ En 12 líneas como máximo:
 - la carpeta de capturas;
 - las decisiones visuales que alguien podría discutir, con su porqué, y las referencias de Mobbin que se aplicaron
   (`design/<slug>/referencias-visuales.md`);
-- lo no comprobable y las preguntas abiertas.
+- lo no comprobable y las preguntas abiertas;
+- en la última línea, `Lecturas: …`: las skills y referencias que leíste completas (y las que no, con el porqué).

@@ -15,7 +15,7 @@ para ser más rápida y gastar menos tokens.
 | `discovery` | Research: problema, usuarios, JTBD, oportunidades, MVP y métricas. | `design-discovery` y las referencias de evidencia y métricas de `product-designer` | `brief.md` |
 | `ux` | Flujos, estructura de pantalla, estados y casos límite, interacción y copy. | `ux-designer-pro` + `patterns-and-flows` y `semantic-accessibility-contract`, `ux-writing`, y las guías de Impeccable `harden`, `clarify` y `onboard` | `ux.md`, con el contrato semántico |
 | `ui` | Diseño visual en código, medición en el navegador y accesibilidad. | `ui-designer-pro` + `visual-semantics`, `visual-qa` y `polish-and-craft` (y las demás referencias según la tarea), `design-accessibility`, las guías de Impeccable `critique` y `distill`, y la documentación de la librería | La pantalla, medida |
-| `design-critic` | Revisión independiente al final de cada pantalla o flujo nuevo, en una sola pasada. | Los checklists de revisión de las skills | Hallazgos: Corregir / Sugerencia / Externo |
+| `design-critic` | Revisión independiente en dos momentos: una pasada corta sobre el encuadre (antes de `ux`) y una al final de cada pantalla o flujo nuevo. | Los checklists de revisión de las skills | Hallazgos: Corregir / Sugerencia / Externo |
 
 Cada especialista lee sus skills completas, pero solo las suyas: ningún agente carga todo el conocimiento.
 
@@ -25,15 +25,19 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | --- | --- |
 | Ajuste puntual (un texto, un color, un espaciado) | Lo hace el lead y lo mide. |
 | Cambio de flujo, estados o copy | `ux` → `ui` → critic |
-| Pantalla o flujo nuevo | `ux` → `ui` → critic. Si la dirección visual es nueva, con checkpoint (ver abajo). |
-| Producto nuevo o área nueva grande | Discovery → `ux` → checkpoint de `ui` → `ui` completo → critic. El agente `discovery` entra si hay que planificar research, si el material es mucho (más de 5 entrevistas, transcripciones, tickets) o si hace falta un journey, un blueprint o un árbol de oportunidades. Si el research es chico, el lead lo sintetiza en el brief. |
+| Pantalla o flujo nuevo | Encuadre → critic de encuadre → `ux` → `ui` → critic. Si la dirección visual es nueva, con checkpoint (ver abajo). |
+| Producto nuevo o área nueva grande | Discovery → critic de encuadre → `ux` → checkpoint de `ui` → `ui` completo → critic. El agente `discovery` entra si hay que planificar research, si el material es mucho (más de 5 entrevistas, transcripciones, tickets) o si hace falta un journey, un blueprint o un árbol de oportunidades. Si el research es chico, el lead lo sintetiza en el brief. |
 
-1. El lead encuadra en 5 líneas (problema, resultado, alcance, reglas, hipótesis) en `design/<slug>/brief.md`.
-2. Los especialistas trabajan en orden; ninguno habla con vos: le devuelven sus preguntas al lead.
+1. El lead encuadra en `design/<slug>/brief.md`: problema, resultado, alcance, reglas e hipótesis. En algo nuevo suma
+   el volumen por rol, 2 o 3 mecanismos (al menos uno que elimine la tarea) con el elegido, el supuesto más riesgoso,
+   la profundidad (núcleo o completo, según la evidencia) y la medición, proporcional.
+   El critic revisa ese encuadre en una pasada corta, antes de que se diseñe una sola pantalla.
+2. Los especialistas trabajan en orden; ninguno habla con vos: le devuelven sus preguntas al lead. `ux` diseña primero
+   el camino de alto volumen y deja la matriz de permisos y el cierre del circuito. Cada uno cierra con `Lecturas: …`.
 3. **Checkpoint de dirección visual.** Si la dirección es nueva (producto nuevo, rediseño, sin marca), `ui` construye
    primero solo el esqueleto de la app y la pantalla principal de cada tipo de usuario, con referencias visuales de
    Mobbin por pantalla. El lead te la muestra y espera tu OK antes de construir el resto de los estados.
-4. El critic revisa una vez. Lo que marca como *Corregir* se aplica siempre, continuando al mismo especialista para no
+4. El critic revisa una vez, con una lista priorizada de estados obligatorios, y declara su cobertura. Lo que marca como *Corregir* se aplica siempre, continuando al mismo especialista para no
    volver a leer sus skills.
 5. El lead te cuenta qué se hizo, las decisiones discutibles con su porqué, qué cambió por la crítica y qué falta
    decidir.

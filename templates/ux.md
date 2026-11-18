@@ -15,6 +15,27 @@ Salidas y recuperación: <qué pasa si cancela, si falla, si vuelve después>.
 
 Mecanismo elegido y descartados: <una línea por opción descartada, con el porqué>.
 
+## Camino de alto volumen
+
+<!-- Si «Volumen y operación» del brief muestra un rol que maneja muchos ítems: cómo resuelve el caso común en lote o
+con defaults (seleccionar varios, aceptar las coincidencias, teclado), y recién después el caso de a uno. Si no aplica:
+«no aplica · <por qué>». -->
+
+## Permisos
+
+<!-- Obligatorio si hay más de un rol. Una fila por acción importante. «Visible pero no disponible» dice por qué. -->
+
+| Acción | <rol A> | <rol B> | Notas (quién es dueño, qué pasa si cambia el rol) |
+| --- | --- | --- | --- |
+
+## Cierre del circuito
+
+<!-- Cada cambio que pasa sin que la persona esté mirando (otro rol actuó, un proceso terminó, venció un plazo): cómo se
+entera. Si queda fuera de alcance, decilo con el riesgo. -->
+
+| Cambio | Quién lo provoca | Cómo se entera la persona afectada | En alcance |
+| --- | --- | --- | --- |
+
 ## Pantallas
 
 <!-- Por pantalla: qué va primero, qué se agrupa, cuál es la acción principal y qué es acción, filtro, navegación o estado. -->
