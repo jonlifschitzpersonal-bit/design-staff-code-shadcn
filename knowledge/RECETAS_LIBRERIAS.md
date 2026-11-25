@@ -13,7 +13,8 @@ no entre en el build (`tools/banco/`). Con `tools/medir.mjs` se obtiene, compone
 - qué pares de color no llegan a AA y qué campos, casillas e interruptores no se distinguen del fondo (WCAG 1.4.11);
 - qué controles no muestran foco con el teclado.
 
-Si el proyecto usa HeroUI v3, hay un banco hecho en `templates/librerias/heroui/`. Para otra librería, armalo igual:
+Si el proyecto usa HeroUI v3 o shadcn/ui, hay un banco hecho en `templates/librerias/heroui/` o `templates/librerias/shadcn/`.
+Para otra librería, armalo igual:
 un `<section data-bloque="<componente>">` por componente, para poder medir uno solo con `--selector` y `--crop`.
 Ese resultado es lo que va en la tabla «Valores por defecto que NO cumplen los pisos» de `<proyecto>-components`.
 
@@ -48,7 +49,29 @@ del piso. Es una decisión de diseño: va en «Decisiones» del brief y en la sk
 - **Windows:** `python` no ve `/tmp` de Git Bash. Escribí las salidas dentro del proyecto (`--out design/...`) y pasá
   rutas relativas.
 
-## 4. Qué no cubre
+## 4. shadcn/ui y Animate UI
+
+shadcn no es un paquete: los componentes se copian a `src/components/ui/` y son del proyecto. Cambia cómo se aplica todo
+lo anterior (medido con el preset Nova, ver `templates/librerias/shadcn/README.md`):
+- **El gancho es `data-slot`, no una clase de rol.** Los estilos son utilidades de Tailwind dentro del componente; una regla
+  sin capa en el tema (`[data-slot="button"] { min-height: 2.75rem }`) le gana a esas utilidades. Se sigue corrigiendo
+  una sola vez, en el tema. Editar el componente es válido, pero entonces el banco y la skill `<proyecto>-ds` tienen
+  que reflejarlo.
+- **El texto suelto no lo alcanza `--text-*`.** El preset usa tamaños arbitrarios (`text-[0.8rem]` en el botón `sm`):
+  van por `data-slot`.
+- **El foco no llega a 3:1 por defecto.** El aro es `ring-ring/50`, de mitad de opacidad. No se arregla subiendo `--ring`
+  (con 50 % de opacidad casi no cambia): hace falta un contorno opaco. Medí `aroBajo3` en el banco, que es lo que revela
+  el problema.
+- **Casilla e interruptor** son botones visibles de Radix: `medir.mjs` mide el botón, no la etiqueta que lo envuelve, así
+  que no hay CSS que los lleve al piso sin deformarlos. Rehacelos en el componente con un área táctil propia o declará
+  la excepción.
+- **Animate UI** (`@animate-ui/react` + `motion`) cambia el import de la primitiva de cada componente por su versión
+  animada y quita las clases de animación CSS que Motion reemplaza; no cambia estructura ni estilos, así que los pisos
+  siguen valiendo. Corré `npx @animate-ui/cli@latest animate all --dry-run` antes de aplicarlo. El movimiento sale de la
+  librería: no se escribe a mano. Respeta «reducir movimiento»; `medir.mjs` mide con esa preferencia activa y las
+  capturas salen en estado final. **El movimiento en sí no se mide**: se dice como no comprobable.
+
+## 5. Qué no cubre
 
 Hover, estado seleccionado, estado con error y modo oscuro solo se miden si la página se carga en ese estado: abrilo por
 URL o parámetro y corré `medir.mjs` de nuevo. El lector de pantalla, el zoom del sistema y el orden real de lectura no

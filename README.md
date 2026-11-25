@@ -1,7 +1,7 @@
 # Design Staff Code v2
 
 Un equipo de product design para Claude Code que diseña **directo en código** (React + una librería de componentes
-como HeroUI). Cuatro agentes que juntos funcionan como un Staff Designer, más un revisor independiente. Sin expedientes,
+como HeroUI o shadcn/ui). Cuatro agentes que juntos funcionan como un Staff Designer, más un revisor independiente. Sin expedientes,
 bitácoras ni informes: cada iniciativa deja solo `brief.md`, `ux.md` y la pantalla funcionando.
 
 Es la versión 2 de [`design-staff-code`](https://github.com/jonlifschitzpersonal-bit/design-staff-code), simplificada
@@ -57,6 +57,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `templates/brief.md`, `templates/ux.md` | Los dos documentos de cada iniciativa. |
 | `templates/project/tools/medir.mjs` | Playwright: captura y mide texto, targets, contraste, foco y árbol de accesibilidad en el DOM real. |
 | `templates/librerias/heroui/` | Banco de medición y capa de pisos para HeroUI v3. |
+| `templates/librerias/shadcn/` | Banco de medición y capa de pisos para shadcn/ui (Tailwind v4), con o sin Animate UI. |
 
 ## Instalar
 

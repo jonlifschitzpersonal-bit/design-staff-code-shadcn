@@ -1,0 +1,87 @@
+/*
+ * PLANTILLA de capa de pisos para shadcn/ui (preset Nova, base Radix) sobre Tailwind v4. Es un punto de partida, NO un
+ * valor final. Medida con shadcn 4.23 y Animate UI 2.4.
+ *
+ * Qué hace: lleva el texto a un mínimo de 16 px (--text-*), los controles a un mínimo de 44 px, el borde de los campos
+ * y el aro de foco a 3:1 y el texto del botón destructivo a AA. Con `?pisos` el banco (tools/banco/) carga ESTE archivo
+ * (que importa el tema de src/ y le suma los ajustes) para medir el antes y el después con `tools/medir.mjs`.
+ *
+ * A diferencia de una librería cerrada, en shadcn los componentes no tienen clases de rol (`.button`): los estilos son
+ * utilidades de Tailwind dentro de cada componente. El gancho para corregirlos desde el tema es `data-slot`, que todos
+ * los componentes traen. Una regla sin capa le gana a las utilidades de Tailwind (que están en `@layer utilities`),
+ * así que `min-height` pisa al `h-8` sin tocar el componente.
+ *
+ * Antes de usarla en un proyecto:
+ *   1. Cambiá los pisos (1rem = 16 px, 2.75rem = 44 px) por los del proyecto.
+ *   2. Los colores de la sección 2 son candidatos medidos en modo claro con el preset Nova: reemplazalos por los de la
+ *      marca y volvé a medir. El modo oscuro NO está medido.
+ *   3. Si ya lo aprobaste, pasá las secciones 1 a 4 a la capa de tema (src/index.css), UNA sola vez, SIN el
+ *      `@import` de la primera línea, y volvé a medir todas las pantallas.
+ *
+ * Costo que hay que decir en voz alta: subir --text-xs, --text-sm y --text-base al mismo tamaño APLANA la jerarquía por
+ * tamaño de la librería (etiquetas, ayuda y cuerpo pasan a medir igual). Hay que recuperarla con peso, color y
+ * espaciado, o con una escala propia por encima de 16 px. Registralo como decisión.
+ */
+@import "../../src/index.css";
+
+/* 1. Escala de texto: el preset usa text-xs, text-sm y text-base para casi todo (y text-[0.8rem] en el botón sm). */
+@theme {
+  --text-xs: 1rem;
+  --text-xs--line-height: 1.5rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+}
+
+/* El texto sin clase hereda del body: también 16 px. */
+body {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+/* 2. Color: valores por defecto que no llegan al piso (candidatos, ver arriba). */
+:root {
+  --input: oklch(0.6 0 0); /* borde de campos y selector: 1.26:1 por defecto -> 3:1 o más (WCAG 1.4.11) */
+  --destructive: oklch(0.505 0.213 27.5); /* texto del botón destructivo: 4.00:1 por defecto -> AA */
+  --ring: oklch(0.45 0 0); /* color del aro de foco (ver sección 4) */
+}
+
+/* 3. Targets: 44 px de alto como mínimo en todo lo que se toca. */
+[data-slot="button"],
+[data-slot="input"],
+[data-slot="select-trigger"],
+[data-slot="accordion-trigger"],
+[data-slot="tabs-trigger"] {
+  min-height: 2.75rem;
+}
+[data-slot="button"],
+[data-slot="tabs-trigger"] {
+  min-width: 2.75rem;
+}
+[data-slot="button"] {
+  font-size: 1rem; /* el botón sm usa un tamaño suelto (0.8rem) que --text-* no alcanza */
+}
+/* La lista de pestañas tiene alto fijo en el preset: se libera para que contenga pestañas de 44 px. */
+[data-slot="tabs-list"] {
+  height: auto;
+  min-height: 3rem;
+}
+[data-slot="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* 4. Foco: el aro del preset es `ring-ring/50` (mitad de opacidad) y no llega a 3:1. Un contorno opaco sí, y además
+ *    aparece cuando el campo está en error (aria-invalid), donde el aro por defecto desaparece. */
+[data-slot]:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Lo que ESTA capa no arregla (medilo igual):
+ *   - La casilla pasa de 16 a 24 px, pero su target sigue bajo 44 px, y el interruptor (32x18 px) no se toca: son
+ *     botones visibles de Radix y `medir.mjs` mide el botón, no su etiqueta. Si el producto los necesita, hay que
+ *     rehacerlos en el componente (src/components/ui/) con un área táctil propia, o declarar la excepción.
+ *   - Modo oscuro (--input es blanco al 15 % de opacidad) y estados hover/seleccionado: no se miden con el banco.
+ */

@@ -9,6 +9,9 @@
 //             --selector "main"              mide solo dentro de ese elemento
 //             --crop                         la captura se recorta a --selector (por defecto, página completa)
 //             --sin-foco                     no recorre el teclado (más rápido)
+//             --motion                       mide con las animaciones activas. Por defecto emula «reducir movimiento»
+//                                            para que las librerías animadas (Motion, Animate UI) no se midan a mitad de
+//                                            una entrada. Usalo solo para capturar el movimiento en sí.
 //             --strict                       sale con código 1 si hay incumplimientos
 //
 // Salida, junto a la captura (<out>/<name>*):
@@ -32,7 +35,8 @@
 //     mide el contraste del aro contra lo que tapa. Es una aproximación por píxeles, no la lectura del CSS.
 //   - Semántica: árbol de accesibilidad (ariaSnapshot) y controles sin nombre accesible.
 //   - NO mide: hover, estado seleccionado o con error si la página no carga en ese estado (abrilo por URL o
-//     parámetro y medí de nuevo), zoom, la lectura real con un lector de pantalla, animaciones, contraste sobre imágenes. Los radios dentro
+//     parámetro y medí de nuevo), zoom, la lectura real con un lector de pantalla, el movimiento en sí (se mide con «reducir movimiento» activo; con
+//     --motion se captura con animación, pero no se evalúa), contraste sobre imágenes. Los radios dentro
 //     de un grupo se recorren con las flechas, no con Tab: figuran como "no alcanzables con Tab" a título informativo.
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -59,12 +63,24 @@ const selector = opt('selector', 'body')
 const crop = args.includes('--crop')
 const medirFoco = !args.includes('--sin-foco')
 const strict = args.includes('--strict')
+const conMovimiento = args.includes('--motion')
 
 mkdirSync(out, { recursive: true })
 
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport: { width, height }, deviceScaleFactor: 2 })
+// Por defecto se emula «reducir movimiento»: una librería animada (Motion, Animate UI) respeta esa preferencia y deja
+// cada elemento en su estado final. Sin esto, la opacidad o la posición de una entrada a medio hacer falsean el
+// contraste, los tamaños y la captura.
+const page = await browser.newPage({
+  viewport: { width, height },
+  deviceScaleFactor: 2,
+  reducedMotion: conMovimiento ? 'no-preference' : 'reduce',
+})
 await page.goto(url, { waitUntil: 'networkidle' })
+// Aun con «reducir movimiento», las transiciones de opacidad o de color pueden seguir en curso: se espera a que
+// terminen las animaciones del documento y se deja un margen corto para las que maneja JavaScript.
+await page.evaluate(() => Promise.allSettled(document.getAnimations().map((a) => a.finished)))
+await page.waitForTimeout(150)
 
 const png = join(out, `${name}.png`)
 if (crop && selector !== 'body') await page.locator(selector).first().screenshot({ path: png })
@@ -606,6 +622,13 @@ for (const t of medidas.textoBajoPiso.slice(0, 10)) console.log(`  ! texto ${t.f
 for (const t of medidas.targetsBajoPiso.slice(0, 10)) console.log(`  ! target ${t.anchoPx}x${t.altoPx}px: ${t.el}`)
 for (const t of medidas.noTexto.filter((x) => !x.cumple).slice(0, 10)) console.log(`  ! no textual ${t.razon}:1 (${t.tipo}): ${t.el}`)
 for (const f of foco.recorrido.filter((x) => !x.indicador).slice(0, 10)) console.log(`  ! sin foco visible: ${f.el}`)
+
+// Una página que no midió nada no cumple: no se midió. Pasa cuando la página falló al cargar (por ejemplo, un import
+// que no resuelve y el overlay de error de Vite) y, sin esta guarda, figuraría como «0 incumplimientos».
+if (r.textos === 0 && r.targets === 0) {
+  console.error(`\nERROR: no se midió ningún texto ni control en ${selector}. Revisá la captura (${png}) y la consola del servidor: la página probablemente no cargó.`)
+  process.exit(3)
+}
 
 const falla =
   r.textosBajoPiso > 0 ||

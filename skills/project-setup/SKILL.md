@@ -30,8 +30,10 @@ Leé `package.json` (framework, librería y versión, comandos de dev y build), 
 
 1. Copiá `templates/project/tools/medir.mjs` a `tools/medir.mjs`. Necesita `playwright` como dependencia de desarrollo y
    Chromium (`npx playwright install chromium`): proponelo antes de instalarlo.
-2. Si hay un banco para la librería en `templates/librerias/<librería>/` (hoy: `heroui`), copialo a `tools/banco/` y
-   revisá que los imports coincidan con la versión instalada.
+2. Si hay un banco para la librería en `templates/librerias/<librería>/` (hoy: `heroui` y `shadcn`; el segundo se elige si hay
+   un `components.json`), copialo a `tools/banco/` y revisá que los imports coincidan con lo instalado. El banco de shadcn
+   importa `@/components/ui/*`: comprobá que el alias `@` exista en `vite.config` y `tsconfig`. Un banco que no carga
+   no mide nada: `medir.mjs` lo avisa y sale con código 3.
 3. Medí el banco sin personalizar y con `?pisos`, en los viewports del proyecto (ver `knowledge/RECETAS_LIBRERIAS.md`).
 
 ## 4. Capa de pisos
