@@ -34,6 +34,10 @@ node tools/medir.mjs --url "http://localhost:5173/tools/banco/index.html?abierto
 - **Gancho: `data-slot`.** shadcn no tiene clases de rol (`.button`): los estilos son utilidades dentro de cada
   componente. Todos traen `data-slot`, y una regla sin capa en el tema le gana a las utilidades de Tailwind, así que el
   piso se corrige una sola vez sin tocar el componente.
+- **Overlays medidos** (`?abierto=dialog|popover|select|tooltip`): con la capa, 0 controles bajo 44 px, 0 textos bajo
+  16 px y 0 fallas de foco. Ojo con `asChild`: el `data-slot` del disparador reemplaza al de `button`, por eso la capa
+  usa `[data-slot$="-trigger"]`, `dialog-close` y `select-item`. Sin esas reglas, el disparador de un popover, la X del
+  diálogo y las opciones del select se quedaban en 28 a 32 px.
 - **No lo arregla la capa:** la casilla y el interruptor son botones visibles de Radix y `medir.mjs` mide el botón, no la
   etiqueta que lo envuelve. Hay que rehacerlos en el componente con un área táctil propia, o declarar la excepción.
 - **Cambio de breakpoint:** a diferencia de HeroUI, el preset no baja el alto de los controles en pantallas grandes.

@@ -57,6 +57,11 @@ lo anterior (medido con el preset Nova, ver `templates/librerias/shadcn/README.m
   sin capa en el tema (`[data-slot="button"] { min-height: 2.75rem }`) le gana a esas utilidades. Se sigue corrigiendo
   una sola vez, en el tema. Editar el componente es válido, pero entonces el banco y la skill `<proyecto>-ds` tienen
   que reflejarlo.
+- **Con `asChild`, el `data-slot` del disparador reemplaza al del `Button`.** Un `PopoverTrigger asChild` o un
+  `TooltipTrigger asChild` que envuelve un `Button` deja `data-slot="popover-trigger"`, y una regla solo por
+  `[data-slot="button"]` no lo alcanza (un botón de 32 px siguió ahí con la capa aplicada). Los disparadores se cubren
+  con `[data-slot$="-trigger"]`; la X del diálogo (`dialog-close`) y las opciones del select (`select-item`) llevan su
+  propia regla. Por eso el banco tiene `?abierto=`: los overlays solo existen abiertos y hay que medirlos.
 - **El texto suelto no lo alcanza `--text-*`.** El preset usa tamaños arbitrarios (`text-[0.8rem]` en el botón `sm`):
   van por `data-slot`.
 - **El foco no llega a 3:1 por defecto.** El aro es `ring-ring/50`, de mitad de opacidad. No se arregla subiendo `--ring`

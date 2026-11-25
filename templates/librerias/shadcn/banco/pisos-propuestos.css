@@ -48,15 +48,18 @@ body {
 }
 
 /* 3. Targets: 44 px de alto como mínimo en todo lo que se toca. */
+/* `[data-slot$="-trigger"]` cubre los disparadores (tabs, acordeón, select, popover, tooltip, diálogo): con `asChild`, el
+ * `data-slot` del disparador reemplaza al `button` del Button que envuelve, y una regla solo por `button` no lo alcanza. */
 [data-slot="button"],
 [data-slot="input"],
-[data-slot="select-trigger"],
-[data-slot="accordion-trigger"],
-[data-slot="tabs-trigger"] {
+[data-slot$="-trigger"],
+[data-slot="dialog-close"],
+[data-slot="select-item"] {
   min-height: 2.75rem;
 }
 [data-slot="button"],
-[data-slot="tabs-trigger"] {
+[data-slot$="-trigger"],
+[data-slot="dialog-close"] {
   min-width: 2.75rem;
 }
 [data-slot="button"] {
