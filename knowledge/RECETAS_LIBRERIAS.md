@@ -76,7 +76,39 @@ lo anterior (medido con el preset Nova, ver `templates/librerias/shadcn/README.m
   librería: no se escribe a mano. Respeta «reducir movimiento»; `medir.mjs` mide con esa preferencia activa y las
   capturas salen en estado final. **El movimiento en sí no se mide**: se dice como no comprobable.
 
-## 5. Qué no cubre
+## 5. Lo que la librería no trae: ui-sdk
+
+Cuando falta un componente con **comportamiento difícil** (fecha tipeable con calendario, combobox tipeable, número o
+monto con formato, o cualquier patrón APG con foco, teclado y ARIA propios), no se escribe a mano: ahí aparecen los bugs
+de foco, de teclado y de parseo. Se usa **ui-sdk** (`@ui-sdk/react` + `@ui-sdk/core`, https://ui-sdk.dev):
+comportamiento headless sin estilos, con la documentación dentro del paquete (`node_modules/@ui-sdk/react/docs/` y la
+skill `node_modules/@ui-sdk/core/skills/ui-sdk/SKILL.md`). Leé el doc del componente antes de usarlo.
+
+- **Cuándo no:** para lo que la librería ya trae (diálogo, select, popover, tabs…). Duplica comportamiento, pesa y suma
+  choques. Con la fecha fueron unos 47 kB comprimidos por un solo componente.
+- **Instalación:** `npm i @ui-sdk/react @ui-sdk/core` con **versión fija** (es beta), y `@layer ui-sdk;` como primera
+  línea del CSS del tema, encima de `@import "tailwindcss"`, para que su CSS mínimo quede por debajo del nuestro.
+- **Envolvé cada componente en uno del proyecto** (`src/components/<nombre>.tsx`) que le pone los tokens y los pisos y
+  resuelve los choques una sola vez. Las pantallas usan el wrapper, nunca ui-sdk directo. Se estiliza con Tailwind sobre
+  sus `data-slot` y atributos de estado (`data-open`, `data-disabled`, `data-today`, `data-outside`, `aria-invalid`).
+  Ejemplo medido: `templates/librerias/shadcn/ui-sdk/campo-fecha.tsx`.
+- **Choques con shadcn (Radix)**, encontrados probando en el navegador:
+  - **Escape dentro de un Dialog o Sheet de Radix cierra el diálogo entero** y se pierde el formulario: Radix toma
+    Escape en la captura de `document` y ui-sdk recibe el evento ya consumido. El wrapper controla `open` y, mientras el
+    popup está abierto, resuelve Escape antes, con un `keydown` en la captura de `window`. Probá las dos: la primera
+    Escape cierra el popup y devuelve el foco al disparador; la segunda cierra el diálogo.
+  - **La variante `data-selected:` no funciona:** `shadcn/tailwind.css` la redefine como `[data-selected="true"]` (por
+    cmdk) y ui-sdk marca con el atributo sin valor. Usá `aria-selected:`. Las demás variantes de shadcn (`data-open`,
+    `data-disabled`, `data-active`, `data-checked`) aceptan el atributo sin valor.
+- **Pisos:** el disparador lleva `data-slot="…-trigger"`, así que la capa de shadcn ya lo lleva a 44 px; las celdas del
+  calendario y los botones de mes van en el wrapper (`size-11`). `medir.mjs` no abre popups: medí el popup abierto con
+  un script propio de Playwright (tamaño de las celdas, texto, foco al abrir y al cerrar).
+- **Movimiento:** ui-sdk anima con CSS (`data-starting-style` y `data-ending-style`). Si el proyecto exige que el
+  movimiento salga de Animate UI, el popup va sin animación y se dice; si permite CSS en estos popups, se anima ahí. Lo
+  decide el proyecto y queda en su skill `<proyecto>-ds`.
+- **Lo que no da:** nada visual. Todo el estilo es del proyecto.
+
+## 6. Qué no cubre
 
 Hover, estado seleccionado, estado con error y modo oscuro solo se miden si la página se carga en ese estado: abrilo por
 URL o parámetro y corré `medir.mjs` de nuevo. El lector de pantalla, el zoom del sistema y el orden real de lectura no

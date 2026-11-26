@@ -46,5 +46,8 @@ por encima del piso.
 
 - Si un componente de la librería da el diseño, se usa tal cual. Si no, se corrige una vez en el tema o se arma uno
   propio, con su motivo.
+- Si falta un componente con comportamiento difícil (fecha, combobox tipeable, número con formato), va con ui-sdk en un
+  wrapper del proyecto, no escrito a mano (`RECETAS_LIBRERIAS.md` §5 del plugin). <Versión fija de ui-sdk, wrappers
+  existentes y si sus popups se animan con CSS o van sin animación.>
 - <Reglas de rol del producto: por ejemplo, un filtro no se dibuja como una acción; un solo botón principal por
   pantalla.>

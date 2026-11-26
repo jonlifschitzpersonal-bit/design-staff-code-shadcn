@@ -57,8 +57,11 @@ para cada pantalla (esqueleto, jerarquía, escala, color, superficies, densidad)
    - los pisos de texto y de target se corrigen una sola vez, en la capa de tema. La capa de tema es solo tokens, pisos
      y ajustes de la librería: los estilos de una pantalla o de una pieza propia van en su componente (o en un módulo
      al lado), no en el archivo del tema;
-   - lo que la librería ya trae no se reinventa. El movimiento sale de la librería (Animate UI, si el proyecto la usa),
-     no se escribe a mano, y cada animación tiene un trabajo (§17 de ui-designer-pro y `polish-and-craft` §8);
+   - lo que la librería ya trae no se reinventa. Lo que no trae y tiene comportamiento difícil (fecha con calendario,
+     combobox tipeable, número con formato) tampoco se escribe a mano: va con ui-sdk dentro de un wrapper del proyecto
+     (`RECETAS_LIBRERIAS.md` §5), y el popup abierto se mide con un script propio porque `medir.mjs` no lo abre;
+   - el movimiento sale de la librería (Animate UI, si el proyecto la usa), no se escribe a mano, y cada animación
+     tiene un trabajo (§17 de ui-designer-pro y `polish-and-craft` §8);
      `medir.mjs` mide con «reducir movimiento» activo, así que el movimiento queda como no comprobable;
    - el contrato semántico de `ux.md` se respeta: rol, nombre, estado, agrupación, orden y foco. Una decisión visual no
      puede partir una unidad, fusionar controles independientes ni anidar acciones.

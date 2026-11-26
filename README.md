@@ -57,7 +57,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `templates/brief.md`, `templates/ux.md` | Los dos documentos de cada iniciativa. |
 | `templates/project/tools/medir.mjs` | Playwright: captura y mide texto, targets, contraste, foco y árbol de accesibilidad en el DOM real. |
 | `templates/librerias/heroui/` | Banco de medición y capa de pisos para HeroUI v3. |
-| `templates/librerias/shadcn/` | Banco de medición y capa de pisos para shadcn/ui (Tailwind v4), con o sin Animate UI. |
+| `templates/librerias/shadcn/` | Banco de medición y capa de pisos para shadcn/ui (Tailwind v4), con o sin Animate UI, y un wrapper de ui-sdk para la fecha (lo que shadcn no trae). |
 
 ## Instalar
 

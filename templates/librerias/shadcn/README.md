@@ -51,3 +51,11 @@ node tools/medir.mjs --url "http://localhost:5173/tools/banco/index.html?abierto
 import de la primitiva de cada componente shadcn por su versión animada y quita las clases de animación CSS que Motion
 reemplaza. No toca estructura, estilos ni API. `medir.mjs` mide con «reducir movimiento» activo por defecto, para no
 medir una entrada a medio hacer; `--motion` captura con animación, pero el movimiento no se evalúa.
+
+## Lo que shadcn no trae: ui-sdk
+
+`ui-sdk/campo-fecha.tsx` es un wrapper medido del `DatePicker` de ui-sdk (`0.1.0-beta.17`): fecha tipeable en es-AR
+con calendario, dentro de diálogos de shadcn. Resuelve los dos choques con Radix (Escape cierra el diálogo entero;
+`data-selected:` no aplica) y lleva celdas y botones a 44 px. Va a `src/components/`. Pasaron 52 comprobaciones de
+comportamiento con Playwright y `medir.mjs` sin fallas a 1440 y 390, en claro y oscuro. Reglas completas en
+`knowledge/RECETAS_LIBRERIAS.md` §5.
