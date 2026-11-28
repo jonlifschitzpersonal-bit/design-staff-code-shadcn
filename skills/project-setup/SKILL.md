@@ -64,6 +64,11 @@ de la skill DS dice «nivel: pendiente».
 
 Si el marketplace no se llama `jony-plugins`, ajustá la clave de `enabledPlugins` (`claude plugin list` lo muestra).
 
+**Impeccable.** `ui` hace su pasada final con el plugin Impeccable (`distill`, `clarify` y `polish`), y la plantilla lo
+habilita. Si `claude plugin list` no muestra `impeccable@impeccable`, proponé instalarlo:
+`claude plugin marketplace add pbakaus/impeccable` y `claude plugin install impeccable@impeccable`. No corras su `init`
+ni su `document`: el producto vive en `brief.md` y el sistema, en la skill `<proyecto>-ds`.
+
 ## 6. Entrega
 
 En pocas líneas: qué se creó, qué quedó pendiente y con quién, y que hay que **reiniciar Claude Code** si el plugin se

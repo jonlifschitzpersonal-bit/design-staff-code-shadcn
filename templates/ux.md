@@ -49,7 +49,7 @@ entera. Si queda fuera de alcance, decilo con el riesgo. -->
 | Vacío | `?estado=vacio` | | | |
 | Error | `?estado=error` | | | |
 
-<!-- Sumá los de harden.md que apliquen: texto muy largo y muy corto, muchos ítems, sin permiso, validación, otro idioma
+<!-- Sumá los casos límite que apliquen: texto muy largo y muy corto, muchos ítems, sin permiso, validación, otro idioma
 (+30%), formatos de fecha y número. -->
 
 ## Copy

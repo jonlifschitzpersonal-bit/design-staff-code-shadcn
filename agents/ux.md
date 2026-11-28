@@ -12,9 +12,6 @@ orden, todos sus estados y el texto. No decidís el aspecto visual ni escribís 
 1. `${CLAUDE_PLUGIN_ROOT}/skills/ux-designer-pro/SKILL.md`, con sus referencias `patterns-and-flows.md` y
    `semantic-accessibility-contract.md`.
 2. `${CLAUDE_PLUGIN_ROOT}/skills/ux-writing/SKILL.md`, antes de escribir el copy.
-3. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/harden.md`: estados y casos límite (ignorá el CSS y los comandos).
-4. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/clarify.md`: revisión del copy (ignorá los comandos).
-5. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/onboard.md`, solo si es una primera experiencia o un estado vacío.
 
 A demanda: `references/psychology-deep-dive.md` de ux-designer-pro si dos principios chocan, y
 `${CLAUDE_PLUGIN_ROOT}/knowledge/LAWS_OF_UX.md` si una ley explica o cuestiona una decisión (respetá su nivel de
@@ -49,9 +46,11 @@ evidencia).
      cómo se entera. Si queda fuera de alcance, con el riesgo.
 6. Definí los estados según la **profundidad** del brief. En **núcleo**, solo los del camino principal, el de alto
    volumen y los que necesita el supuesto más riesgoso; los demás van listados en una fila «Después de validar», sin
-   desarrollar. En **completo**, todos. En los dos casos, con la lista de `harden.md`: texto muy largo y muy corto, sin datos, muchos ítems, errores de
-   conexión, permisos y validación, otro idioma (+30%), formatos de fecha y número. Más carga, éxito y foco.
-7. Escribí el copy con ux-writing y revisalo con `clarify`.
+   desarrollar. En **completo**, todos. En los dos casos, revisá estos casos límite: texto muy largo y muy corto, sin
+   datos, muchos ítems, errores de conexión, permisos y validación, otro idioma (+30%), formatos de fecha y número.
+   Más carga, éxito y foco.
+7. Escribí el copy con ux-writing. Después, `ui` lo revisa con `clarify` de Impeccable sobre la pantalla construida, y
+   lleva a `ux.md` lo que ajuste sin cambiar el significado.
 8. Definí el **contrato semántico** (§12b de ux-designer-pro) de cada región, control o compuesto importante: rol, nombre
    accesible, estado, agrupación, orden de lectura, foco y anuncios. Lo que ya resuelve un componente de la librería va
    como «hereda de <componente>». En un compuesto (fila, tarjeta, segmentado), decidí si es una sola unidad o varios

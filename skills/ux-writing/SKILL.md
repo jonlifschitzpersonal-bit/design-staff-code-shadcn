@@ -70,8 +70,8 @@ pasó, qué importa y qué hacer ahora**, con las palabras del usuario y en el t
 - [ ] ¿El nivel de lectura es el de la audiencia? ¿Hay frases de más de ~20 palabras?
 - [ ] ¿Algún texto promete algo que la fuente no sostiene?
 
-Cuando el copy es nuevo o cambió, esta revisión va **antes** de la lente `clarify` de Impeccable, y lo que cambia se
-aplica en `ux.md`.
+Cuando el copy es nuevo o cambió, `ux` hace esta revisión en `ux.md`. Después, `ui` pasa `clarify` de Impeccable sobre
+la pantalla construida y lleva a `ux.md` lo que ajuste sin cambiar el significado.
 
 ## Entrega
 

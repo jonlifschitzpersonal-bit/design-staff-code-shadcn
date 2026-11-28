@@ -13,8 +13,8 @@ para ser más rápida y gastar menos tokens.
 | --- | --- | --- | --- |
 | `staff-design-lead` (principal) | **Lead y Product Designer.** Encuadra el problema, decide qué construir, coordina y es el único que habla con vos. | `product-designer` | Encuadre en `brief.md` y un cierre corto en el chat |
 | `discovery` | Research: problema, usuarios, JTBD, oportunidades, MVP y métricas. | `design-discovery` y las referencias de evidencia y métricas de `product-designer` | `brief.md` |
-| `ux` | Flujos, estructura de pantalla, estados y casos límite, interacción y copy. | `ux-designer-pro` + `patterns-and-flows` y `semantic-accessibility-contract`, `ux-writing`, y las guías de Impeccable `harden`, `clarify` y `onboard` | `ux.md`, con el contrato semántico |
-| `ui` | Diseño visual en código, medición en el navegador y accesibilidad. | `ui-designer-pro` + `visual-semantics`, `visual-qa` y `polish-and-craft` (y las demás referencias según la tarea), `design-accessibility`, `MOVIMIENTO.md`, las guías de Impeccable `critique` y `distill`, y la documentación de la librería | La pantalla, medida |
+| `ux` | Flujos, estructura de pantalla, estados y casos límite, interacción y copy. | `ux-designer-pro` + `patterns-and-flows` y `semantic-accessibility-contract`, y `ux-writing` | `ux.md`, con el contrato semántico |
+| `ui` | Diseño visual en código, medición en el navegador y accesibilidad. | `ui-designer-pro` + `visual-semantics`, `visual-qa` y `polish-and-craft` (y las demás referencias según la tarea), `design-accessibility`, `MOVIMIENTO.md` y la documentación de la librería. Al terminar cada familia de pantallas hace sola una pasada con `distill`, `clarify` y `polish` del plugin Impeccable | La pantalla, medida |
 | `design-critic` | Revisión independiente en dos momentos: una pasada corta sobre el encuadre (antes de `ux`) y una al final de cada pantalla o flujo nuevo. | Los checklists de revisión de las skills y la lente de `MOVIMIENTO.md` | Hallazgos: Corregir / Sugerencia / Externo |
 
 Cada especialista lee sus skills completas, pero solo las suyas: ningún agente carga todo el conocimiento.
@@ -49,7 +49,6 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `agents/` | Los cinco agentes. |
 | `skills/product-designer`, `design-discovery`, `ux-designer-pro`, `ux-writing`, `ui-designer-pro`, `design-accessibility` | El conocimiento senior de cada rol. |
 | `skills/project-setup` | Prepara un proyecto: sección de diseño en `CLAUDE.md`, skill `<proyecto>-ds`, medición y capa de pisos. |
-| `vendor/impeccable/` | 5 guías de Impeccable (`critique`, `clarify`, `distill`, `harden`, `onboard`), Apache-2.0. |
 | `knowledge/SUPERFICIE_CODIGO.md` | Cómo se dibuja y se mide en código, y la base móvil (§5). |
 | `knowledge/MOVIMIENTO.md` | La única fuente sobre movimiento: los tres niveles (sobrio, intermedio, expresivo), que el usuario elige en el checkpoint de dirección visual; los límites que valen para cualquier nivel; cómo se configura la librería para cada uno; y cómo se mide. Es la lente de movimiento del critic. |
 | `knowledge/RECETAS_LIBRERIAS.md` | Cómo adoptar una librería sin que sus valores por defecto rompan los pisos, en qué orden buscar un componente que falta, y Sonner. |
@@ -57,7 +56,7 @@ Cada especialista lee sus skills completas, pero solo las suyas: ningún agente 
 | `knowledge/REFERENCIAS_MOBBIN.md` | Cómo buscar referencias en el MCP de Mobbin, si está instalado: flujo (`ux`), estructura de la app y visual (`ui`, que deja `referencias-visuales.md`). |
 | `templates/brief.md`, `templates/ux.md` | Los dos documentos de cada iniciativa. |
 | `templates/project/tools/medir.mjs` | Playwright: captura y mide en el DOM real texto, targets, contraste, foco, árbol de accesibilidad y base móvil. Con `--movimiento`, también qué se mueve y cuánto tarda en quedar quieta (al cargar y después de un clic). |
-| `THIRD_PARTY_NOTICES.md` | Licencias de lo adaptado: Impeccable (Apache-2.0) y `emilkowalski/skills` (MIT). |
+| `THIRD_PARTY_NOTICES.md` | Licencia de lo adaptado: `emilkowalski/skills` (MIT). |
 | `templates/librerias/heroui/` | Banco de medición y capa de pisos para HeroUI v3. |
 | `templates/librerias/shadcn/` | Banco de medición y capa de pisos, movimiento y toque para shadcn/ui (Tailwind v4), con o sin Animate UI (cómo configurar lo que anima por defecto para cada nivel de movimiento), y un wrapper de ui-sdk para la fecha (lo que shadcn no trae). |
 
@@ -80,7 +79,10 @@ En `.claude/settings.local.json`:
 ```json
 {
   "agent": "design-staff-code-v2:staff-design-lead",
-  "enabledPlugins": { "design-staff-code-v2@jony-plugins": true }
+  "enabledPlugins": {
+    "design-staff-code-v2@jony-plugins": true,
+    "impeccable@impeccable": true
+  }
 }
 ```
 
@@ -89,6 +91,16 @@ con `design-staff-code`: comparten los nombres de las skills.
 
 Fuera del plugin, el proyecto pone Playwright (`npm i -D playwright` y `npx playwright install chromium`) y la
 documentación de su librería de componentes.
+
+**Depende de Impeccable** ([pbakaus/impeccable](https://github.com/pbakaus/impeccable)): `ui` usa su skill para la
+pasada de `distill`, `clarify` y `polish`. Se instala aparte, una vez por máquina:
+
+```
+claude plugin marketplace add pbakaus/impeccable
+claude plugin install impeccable@impeccable
+```
+
+Sin Impeccable, `ui` marca la pasada como no comprobable y sigue.
 
 ## Mantener
 

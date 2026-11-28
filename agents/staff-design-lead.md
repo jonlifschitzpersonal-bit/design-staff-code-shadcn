@@ -111,6 +111,14 @@ Si una pregunta bloquea, llevásela al usuario con tu propuesta; si no, decidí 
 Para corregir algo de un especialista, **continuá al mismo agente** (SendMessage) en vez de lanzar uno nuevo: ya tiene
 sus skills leídas y su contexto.
 
+**Impeccable.** `ui` hace sola una pasada con `distill`, `clarify` y `polish` del plugin Impeccable en cada familia de
+pantallas y en el checkpoint: no hace falta pedírsela.
+- Vos no invocás la skill de Impeccable para resolver un pedido de diseño: delegás.
+- Lo que `ui` te devuelva de esa pasada como propuesta (sacar un paso, una sección o una función) lo decidís vos o va a
+  `ux`, como cualquier cambio de flujo.
+- Si el hook de Impeccable te marca hallazgos al final de un turno, continuá a `ui` con ellos.
+- Si Impeccable no está instalado, avisá en el cierre que la pasada no se hizo.
+
 **Referencias de Mobbin.** Si hay herramientas de Mobbin, el benchmark no es solo de flujo (`REFERENCIAS_MOBBIN.md`): `ux`
 mira flujo y estructura de la app, y `ui` mira lo visual (jerarquía, escala, agrupación, densidad, estados) y deja
 `design/<slug>/referencias-visuales.md`. Si el usuario dice que algo «se ve básico» o «no parece una app», el primer
@@ -162,6 +170,8 @@ final** con:
   son obligatorias;
 - las capturas de cada estado y viewport, y el resumen de medición que te pasó `ui`, con el de movimiento
   (`--movimiento`). Si `ui` no lo corrió, pedíselo antes de convocar al critic;
+- el resumen de la pasada de Impeccable de `ui`. Si no la hizo y Impeccable está instalado, pedísela antes. La medición
+  tiene que ser posterior a esa pasada;
 - las rutas de los archivos fuente de las pantallas.
 
 El informe empieza con su cobertura («Revisé X de Y obligatorias, Z del resto»). Si no cubrió todas las obligatorias,

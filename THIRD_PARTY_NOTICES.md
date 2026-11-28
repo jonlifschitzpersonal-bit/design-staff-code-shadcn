@@ -1,9 +1,5 @@
 # Avisos de terceros
 
-## Impeccable (Apache-2.0)
-
-Cinco guías en `vendor/impeccable/`. Licencia y aviso en `vendor/impeccable/LICENSE` y `vendor/impeccable/NOTICE.md`.
-
 ## emilkowalski/skills (MIT)
 
 Partes adaptadas y traducidas al español, y probadas en el banco de pruebas del plugin, desde

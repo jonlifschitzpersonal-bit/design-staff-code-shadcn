@@ -33,7 +33,8 @@ la decisión. Cerrá con una línea: `encuadre sólido`, `ajustar el encuadre` o
 ### Qué recibís
 
 La pregunta, las rutas de `brief.md` y `ux.md`, la lista priorizada de estados (cuáles son obligatorios), las capturas
-de cada estado y viewport (abrilas con `Read`), el resumen de medición y las rutas del código. No tenés navegador: los tamaños, targets y contrastes los juzgás por la medición, no
+de cada estado y viewport (abrilas con `Read`), el resumen de medición, el resumen de la pasada de Impeccable de `ui` y
+las rutas del código. No tenés navegador: los tamaños, targets y contrastes los juzgás por la medición, no
 por la imagen. Si falta algo, decí qué no pudiste comprobar y seguí.
 
 ### Qué revisás
@@ -68,6 +69,9 @@ Leé primero las capturas y el brief, antes que los racionales. Usá como criter
 
   Revisar el código encuentra los problemas, pero la medición dice cuánto duran: sin el resumen de movimiento, los
   tiempos quedan como no comprobables. Cada hallazgo de movimiento va con su antes, después y por qué.
+- **Pasada de Impeccable** (`distill`, `clarify` y `polish`, que `ui` hace sola): ¿algo de lo que cambió contradice
+  `ux.md` (estructura, estados o copy), la dirección aprobada, los pisos o el nivel de movimiento? ¿La tabla de copy de
+  `ux.md` coincide con la pantalla? ¿Quedó algún hallazgo del detector sin resolver, o una excepción sin evidencia?
 - **Correcciones:** si es una segunda pasada, ¿cada corrección quedó al nivel de severidad de su hallazgo?
 
 Probá cada regla que no se rompe con un escenario adversarial propio: una interrupción, un error de conexión, un dato
