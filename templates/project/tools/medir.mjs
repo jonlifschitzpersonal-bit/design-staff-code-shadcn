@@ -12,6 +12,19 @@
 //             --motion                       mide con las animaciones activas. Por defecto emula «reducir movimiento»
 //                                            para que las librerías animadas (Motion, Animate UI) no se midan a mitad de
 //                                            una entrada. Usalo solo para capturar el movimiento en sí.
+//             --movimiento                   además, abre la página con las animaciones ACTIVAS en un contexto aparte y
+//                                            registra cuadro a cuadro qué se mueve al cargar y cuándo queda quieta:
+//                                            cifras que cambian, gráficos que se redibujan, animaciones de más de 300 ms
+//                                            y `transition: all`. «!» marca lo que rompe los límites que valen para
+//                                            cualquier nivel de movimiento (quieta en 2 s, un dato se mueve 1 s como
+//                                            máximo, sin secuencias después de un clic); «·» es un hecho que juzga el
+//                                            nivel aprobado del proyecto. Criterio en knowledge/MOVIMIENTO.md del plugin.
+//             --movimiento-clic "<css>"      lo mismo después de hacer clic en ese elemento (una pestaña, un filtro, un
+//                                            disparador): cuánto tarda en quedar quieta tras la acción. Implica
+//                                            --movimiento.
+//             --safe-area "47,34"            simula áreas seguras (arriba,abajo o arriba,der,abajo,izq, en px) por CDP.
+//                                            Chromium aplica env() aunque falte viewport-fit=cover: esa condición de iOS
+//                                            la revisa el chequeo de base móvil, no la simulación.
 //             --strict                       sale con código 1 si hay incumplimientos
 //
 // Salida, junto a la captura (<out>/<name>*):
@@ -34,9 +47,13 @@
 //   - Foco con teclado: recorre la página con Tab, compara una captura recortada de cada control con y sin foco y
 //     mide el contraste del aro contra lo que tapa. Es una aproximación por píxeles, no la lectura del CSS.
 //   - Semántica: árbol de accesibilidad (ariaSnapshot) y controles sin nombre accesible.
+//   - Base móvil (siempre): zoom bloqueado en el viewport (falla), env(safe-area-inset-*) sin viewport-fit=cover (en
+//     iOS vale 0), y en anchos de teléfono: sin theme-color y campos de menos de 16 px (iOS hace zoom al enfocarlos).
+//   - Movimiento (con --movimiento): tiempos y cambios, no la sensación. Lo que se mueve por una acción solo se mide
+//     con --movimiento-clic.
 //   - NO mide: hover, estado seleccionado o con error si la página no carga en ese estado (abrilo por URL o
-//     parámetro y medí de nuevo), zoom, la lectura real con un lector de pantalla, el movimiento en sí (se mide con «reducir movimiento» activo; con
-//     --motion se captura con animación, pero no se evalúa), contraste sobre imágenes. Los radios dentro
+//     parámetro y medí de nuevo), zoom, la lectura real con un lector de pantalla, cómo se siente el movimiento,
+//     dispositivos reales, contraste sobre imágenes. Los radios dentro
 //     de un grupo se recorren con las flechas, no con Tab: figuran como "no alcanzables con Tab" a título informativo.
 
 import { mkdirSync, writeFileSync } from 'node:fs'
@@ -64,10 +81,192 @@ const crop = args.includes('--crop')
 const medirFoco = !args.includes('--sin-foco')
 const strict = args.includes('--strict')
 const conMovimiento = args.includes('--motion')
+const clicMovimiento = opt('movimiento-clic')
+const medirMovimiento = args.includes('--movimiento') || Boolean(clicMovimiento)
+const areasSeguras = (() => {
+  const v = opt('safe-area')
+  if (!v) return null
+  const n = v.split(',').map(Number)
+  if (n.some(Number.isNaN) || (n.length !== 2 && n.length !== 4)) {
+    console.error('--safe-area espera "arriba,abajo" o "arriba,derecha,abajo,izquierda" en px. Ejemplo: --safe-area 47,34')
+    process.exit(2)
+  }
+  return n.length === 2 ? { top: n[0], right: 0, bottom: n[1], left: 0 } : { top: n[0], right: n[1], bottom: n[2], left: n[3] }
+})()
 
 mkdirSync(out, { recursive: true })
 
 const browser = await chromium.launch()
+
+// Áreas seguras simuladas (notch, indicador de inicio) por CDP. Disponible en el Chromium de Playwright 1.65.
+const simularAreasSeguras = async (p) => {
+  if (!areasSeguras) return null
+  try {
+    const cdp = await p.context().newCDPSession(p)
+    await cdp.send('Emulation.setSafeAreaInsetsOverride', { insets: areasSeguras })
+    return true
+  } catch (e) {
+    return `no soportado por este Chromium (${String(e.message).slice(0, 60)})`
+  }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// 0. Movimiento (--movimiento): con las animaciones ACTIVAS, en un contexto aparte, cuadro a cuadro
+// ---------------------------------------------------------------------------------------------------------------------
+// Se instala antes de que corra la app y registra, con su tiempo: cada texto que cambia (una cifra que cuenta), cada
+// elemento que se redibuja (atributos style, d, transform, x, y, width, height: un gráfico que crece, una animación
+// por JavaScript) y cada animación del documento (WAAPI, CSS). Cuenta CUADROS distintos, no mutaciones: un render de
+// React o un ajuste de layout cambian muchas cosas en el mismo cuadro; una animación cambia lo mismo cuadro tras cuadro.
+const SENSOR_MOVIMIENTO = () => {
+  const t0 = performance.now()
+  const ahora = () => Math.round(performance.now() - t0)
+  const desc = (el) => {
+    if (!el || el.nodeType !== 1) return { el: '?', grupo: '?' }
+    const tag = el.tagName.toLowerCase()
+    const slot = el.closest('[data-slot]')?.getAttribute('data-slot')
+    const role = el.getAttribute('role')
+    const cls = (el.getAttribute('class') || '').split(/\s+/).filter((c) => c && !/[:[\]/]/.test(c)).slice(0, 2).join('.')
+    const txt = (el.getAttribute('aria-label') || el.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 40)
+    const base = `${tag}${role ? `[role=${role}]` : ''}${cls ? `.${cls}` : ''}${slot ? ` (data-slot=${slot})` : ''}`
+    return { el: `${base}${txt ? ` «${txt}»` : ''}`, grupo: base }
+  }
+  const M = (window.__movimiento = { clic: null, ultimo: 0, textos: new Map(), atributos: new Map(), animaciones: [], vistas: new WeakSet(), ahora })
+  const anotar = (mapa, el, t) => {
+    if (!el || el.nodeType !== 1 || !el.closest('body') || /^(STYLE|SCRIPT|TEMPLATE|NOSCRIPT)$/.test(el.tagName)) return null
+    let r = mapa.get(el)
+    if (!r) {
+      r = { ...desc(el), cambios: 0, desde: t, hasta: t, atributos: [], _t: null }
+      mapa.set(el, r)
+    }
+    if (r._t !== t) {
+      r._t = t
+      r.cambios++
+      r.hasta = t
+      if (r.cambios > 1) M.ultimo = t
+    }
+    return r
+  }
+  new MutationObserver((muts) => {
+    const t = ahora()
+    for (const m of muts) {
+      const soloTexto = m.type === 'childList' && m.addedNodes.length > 0 && [...m.addedNodes].every((n) => n.nodeType === 3)
+      if (m.type === 'characterData' || soloTexto) {
+        const el = m.type === 'characterData' ? m.target.parentElement : m.target
+        const antes = m.type === 'characterData' ? m.oldValue : m.removedNodes[0]?.nodeValue
+        const r = anotar(M.textos, el, t)
+        if (r) {
+          if (r.valorInicial === undefined) r.valorInicial = (antes ?? '').trim().slice(0, 40)
+          r.valorFinal = (el.textContent || '').trim().slice(0, 40)
+        }
+      } else if (m.type === 'attributes' || (m.type === 'childList' && [...m.addedNodes].some((n) => n.nodeType === 1))) {
+        // Algunas librerías (Recharts) no cambian atributos: reemplazan los elementos en cada cuadro.
+        const r = anotar(M.atributos, m.target, t)
+        const que = m.type === 'attributes' ? m.attributeName : 'hijos reemplazados'
+        if (r && !r.atributos.includes(que)) r.atributos.push(que)
+      }
+    }
+  }).observe(document, {
+    subtree: true, childList: true, characterData: true, characterDataOldValue: true,
+    attributes: true, attributeFilter: ['style', 'd', 'transform', 'x', 'y', 'width', 'height', 'points'],
+  })
+  const paso = () => {
+    const t = ahora()
+    for (const a of document.getAnimations()) {
+      const timing = a.effect?.getComputedTiming?.() ?? {}
+      const bucle = timing.iterations === Infinity || timing.activeDuration === Infinity
+      if (a.playState === 'running' && !bucle) M.ultimo = t
+      if (M.vistas.has(a)) continue
+      M.vistas.add(a)
+      const props = new Set()
+      if (a.transitionProperty) props.add(a.transitionProperty)
+      if (a.animationName) props.add(`@keyframes ${a.animationName}`)
+      try {
+        for (const k of a.effect.getKeyframes()) for (const p of Object.keys(k)) if (!['offset', 'computedOffset', 'easing', 'composite'].includes(p)) props.add(p)
+      } catch {}
+      M.animaciones.push({
+        ...desc(a.effect?.target), tipo: a.constructor.name, desde: t, bucle,
+        duracionMs: bucle ? null : Math.round(timing.activeDuration || 0),
+        easing: String(a.effect?.getTiming?.().easing ?? '').slice(0, 40), propiedades: [...props],
+      })
+    }
+    requestAnimationFrame(paso)
+  }
+  requestAnimationFrame(paso)
+  document.addEventListener('pointerdown', () => { M.clic = ahora() }, true)
+}
+
+// Espera a que la página quede quieta: 800 ms sin cambios repetidos ni animaciones finitas en curso (tope: 12 s).
+const esperarQuietud = async (p, desdeClic) => {
+  for (;;) {
+    const e = await p.evaluate((dc) => {
+      const M = window.__movimiento
+      const base = dc ? (M.clic ?? M.ahora()) : 0
+      return { base, ahora: M.ahora(), ultimo: M.ultimo }
+    }, desdeClic)
+    const quieta = e.ahora - Math.max(e.ultimo, e.base) >= 800 && e.ahora - e.base >= 1000
+    const tope = e.ahora - e.base >= 12000
+    if (quieta || tope) {
+      return p.evaluate(({ base, tope }) => {
+        const M = window.__movimiento
+        const rel = ({ _t, ...r }) => ({ ...r, desde: Math.max(0, r.desde - base), hasta: Math.max(0, r.hasta - base) })
+        const cifras = [...M.textos.values()].filter((r) => r.cambios >= 5).map(rel)
+        const grupos = new Map()
+        for (const r of [...M.atributos.values()].filter((x) => x.cambios >= 4).map(rel)) {
+          const g = grupos.get(r.grupo) ?? { grupo: r.grupo, elementos: 0, cambiosMax: 0, desde: r.desde, hasta: r.hasta, atributos: [] }
+          g.elementos++
+          g.cambiosMax = Math.max(g.cambiosMax, r.cambios)
+          g.desde = Math.min(g.desde, r.desde)
+          g.hasta = Math.max(g.hasta, r.hasta)
+          for (const a of r.atributos) if (!g.atributos.includes(a)) g.atributos.push(a)
+          grupos.set(r.grupo, g)
+        }
+        const animaciones = M.animaciones.filter((a) => a.desde >= base).map((a) => ({ ...a, desde: a.desde - base }))
+        return {
+          msHastaQuieta: tope ? null : Math.max(0, M.ultimo - base),
+          sinQuietud: tope,
+          cifrasQueCambian: cifras,
+          redibujos: [...grupos.values()],
+          animaciones: animaciones.filter((a) => !a.bucle),
+          bucles: animaciones.filter((a) => a.bucle).length,
+        }
+      }, { base: e.base, tope: !quieta })
+    }
+    await p.waitForTimeout(100)
+  }
+}
+
+let movimiento = null
+if (medirMovimiento) {
+  const ctx = await browser.newContext({ viewport: { width, height }, reducedMotion: 'no-preference' })
+  const p = await ctx.newPage()
+  await simularAreasSeguras(p)
+  await p.addInitScript(SENSOR_MOVIMIENTO)
+  await p.goto(url, { waitUntil: 'load' })
+  movimiento = { alCargar: await esperarQuietud(p, false), alHacerClic: null }
+  if (clicMovimiento) {
+    await p.evaluate(() => {
+      const M = window.__movimiento
+      Object.assign(M, { clic: null, ultimo: 0, textos: new Map(), atributos: new Map(), animaciones: [] })
+    })
+    await p.locator(clicMovimiento).first().click()
+    movimiento.alHacerClic = { selector: clicMovimiento, ...(await esperarQuietud(p, true)) }
+  }
+  // `transition: all` anima propiedades que nadie eligió (alto, padding, foco): se cuenta por data-slot o etiqueta.
+  movimiento.transicionAll = await p.evaluate(() => {
+    const c = {}
+    for (const el of document.querySelectorAll('body *')) {
+      const cs = getComputedStyle(el)
+      const todas = cs.transitionProperty.split(',').some((x) => x.trim() === 'all')
+      if (todas && cs.transitionDuration.split(',').some((d) => parseFloat(d) > 0)) {
+        const k = el.getAttribute('data-slot') || el.tagName.toLowerCase()
+        c[k] = (c[k] || 0) + 1
+      }
+    }
+    return c
+  })
+  await ctx.close()
+}
+
 // Por defecto se emula «reducir movimiento»: una librería animada (Motion, Animate UI) respeta esa preferencia y deja
 // cada elemento en su estado final. Sin esto, la opacidad o la posición de una entrada a medio hacer falsean el
 // contraste, los tamaños y la captura.
@@ -76,11 +275,39 @@ const page = await browser.newPage({
   deviceScaleFactor: 2,
   reducedMotion: conMovimiento ? 'no-preference' : 'reduce',
 })
+const areasSegurasSimuladas = await simularAreasSeguras(page)
 await page.goto(url, { waitUntil: 'networkidle' })
 // Aun con «reducir movimiento», las transiciones de opacidad o de color pueden seguir en curso: se espera a que
 // terminen las animaciones del documento y se deja un margen corto para las que maneja JavaScript.
 await page.evaluate(() => Promise.allSettled(document.getAnimations().map((a) => a.finished)))
 await page.waitForTimeout(150)
+
+// Base móvil: lo que el código ya delata sin un teléfono (knowledge/SUPERFICIE_CODIGO.md §5 del plugin).
+const baseMovil = await page.evaluate((anchoTelefono) => {
+  const viewport = document.querySelector('meta[name="viewport"]')?.getAttribute('content') ?? ''
+  const v = Object.fromEntries(viewport.split(',').map((p) => p.split('=').map((s) => s.trim().toLowerCase())))
+  const zoomBloqueado = ['no', '0'].includes(v['user-scalable']) || (v['maximum-scale'] !== undefined && Number(v['maximum-scale']) < 2)
+  let usaAreasSeguras = document.querySelector('[style*="safe-area-inset"]') !== null
+  for (const s of document.styleSheets) {
+    if (usaAreasSeguras) break
+    try {
+      for (const r of s.cssRules) if (r.cssText.includes('safe-area-inset')) { usaAreasSeguras = true; break }
+    } catch {
+      // hoja de otro origen: no se puede leer
+    }
+  }
+  const campos = anchoTelefono
+    ? [...document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]), textarea, select')]
+        .filter((el) => el.getClientRects().length && parseFloat(getComputedStyle(el).fontSize) < 16).length
+    : 0
+  return {
+    viewport,
+    zoomBloqueado,
+    areasSegurasSinViewportFit: usaAreasSeguras && !/viewport-fit\s*=\s*cover/i.test(viewport),
+    sinThemeColor: anchoTelefono && !document.querySelector('meta[name="theme-color"]'),
+    camposBajo16px: campos,
+  }
+}, width < 768)
 
 const png = join(out, `${name}.png`)
 if (crop && selector !== 'body') await page.locator(selector).first().screenshot({ path: png })
@@ -573,8 +800,11 @@ const paresNoTexto = medidas._paresNoTexto
 delete medidas._paresNoTexto
 medidas.resumen.controlesSinNombreAccesible = aria ? sinNombre.length : null
 medidas.controlesSinNombreAccesible = sinNombre
+medidas.resumen.zoomBloqueado = baseMovil.zoomBloqueado
+medidas.baseMovil = { ...baseMovil, areasSegurasSimuladas: areasSeguras ? { ...areasSeguras, aplicadas: areasSegurasSimuladas } : null }
 writeFileSync(join(out, `${name}.medidas.json`), JSON.stringify(medidas, null, 2))
 if (aria) writeFileSync(join(out, `${name}.aria.yml`), aria + '\n')
+if (movimiento) writeFileSync(join(out, `${name}.movimiento.json`), JSON.stringify(movimiento, null, 2))
 
 const pares = []
 const noComprobables = []
@@ -623,6 +853,65 @@ for (const t of medidas.targetsBajoPiso.slice(0, 10)) console.log(`  ! target ${
 for (const t of medidas.noTexto.filter((x) => !x.cumple).slice(0, 10)) console.log(`  ! no textual ${t.razon}:1 (${t.tipo}): ${t.el}`)
 for (const f of foco.recorrido.filter((x) => !x.indicador).slice(0, 10)) console.log(`  ! sin foco visible: ${f.el}`)
 
+// Base móvil: solo se imprime lo que hay que mirar.
+if (areasSeguras) console.log(`  áreas seguras simuladas: ${JSON.stringify(areasSeguras)} ${areasSegurasSimuladas === true ? '' : `(${areasSegurasSimuladas})`}`)
+if (baseMovil.zoomBloqueado) console.log(`  ! zoom bloqueado en el viewport («${baseMovil.viewport}»): falla WCAG 1.4.4. Arreglá la causa (campos de 16 px o más)`)
+if (baseMovil.areasSegurasSinViewportFit) console.log('  ! usa env(safe-area-inset-*) sin viewport-fit=cover: en iOS vale 0 y esas reglas no hacen nada')
+if (baseMovil.sinThemeColor) console.log('  · sin <meta name="theme-color">: la barra del navegador no toma el color de la app (uno por esquema)')
+if (baseMovil.camposBajo16px) console.log(`  · ${baseMovil.camposBajo16px} campos bajo 16 px: iOS hace zoom al enfocarlos`)
+
+// Movimiento: hechos y tiempos. «!» marca lo que rompe los límites de knowledge/MOVIMIENTO.md §2, que valen para
+// cualquier nivel de movimiento. «·» es un hecho: que vaya o no lo decide el nivel aprobado del proyecto (§1).
+const LIMITE_QUIETA_AL_CARGAR_MS = 2000
+const LIMITE_DATO_MS = 1000
+const SECUENCIA_MS = 50 // intermedio del banco: 11 ms; salida y después entrada de Animate UI: 98 a 123 ms
+const imprimirMovimiento = (titulo, m, { esAccion = false } = {}) => {
+  const tarde = !esAccion && (m.sinQuietud || m.msHastaQuieta > LIMITE_QUIETA_AL_CARGAR_MS)
+  console.log(`  ${tarde ? '! ' : ''}${titulo}: ${m.sinQuietud ? 'NO queda quieta en 12 s' : `quieta a los ${m.msHastaQuieta} ms`}` +
+    `${tarde ? ` (límite: ${LIMITE_QUIETA_AL_CARGAR_MS / 1000} s)` : ''}` +
+    `${m.bucles ? ` (${m.bucles} animaciones en bucle, como spinners o esqueletos)` : ''}`)
+  for (const c of m.cifrasQueCambian.slice(0, 8)) {
+    const ms = c.hasta - c.desde
+    const pasa = ms > LIMITE_DATO_MS
+    console.log(`    ${pasa ? '!' : '·'} cifra que cambia ${c.cambios} veces en ${ms} ms (${c.valorInicial || '∅'} → ${c.valorFinal}, ${c.desde}–${c.hasta} ms)` +
+      `${pasa ? ` (límite: ${LIMITE_DATO_MS / 1000} s)` : ''}: ${c.grupo}`)
+  }
+  for (const g of m.redibujos.slice(0, 8)) {
+    const ms = g.hasta - g.desde
+    const pasa = ms > LIMITE_DATO_MS
+    console.log(`    ${pasa ? '!' : '·'} ${g.elementos} × ${g.grupo} se redibuja (${g.atributos.join(', ')}) entre ${g.desde} y ${g.hasta} ms` +
+      `${pasa ? ` (límite: ${LIMITE_DATO_MS / 1000} s)` : ''}`)
+  }
+  // Después de una acción frecuente, nada hace esperar: una animación que arranca cuando otra del mismo grupo ya
+  // empezó es una secuencia (salir y después entrar) o un escalonado.
+  if (esAccion) {
+    const porGrupo = new Map()
+    for (const a of m.animaciones.filter((x) => x.duracionMs > 0)) porGrupo.set(a.grupo, [...(porGrupo.get(a.grupo) ?? []), a])
+    for (const [g, as] of porGrupo) {
+      const inicio = Math.min(...as.map((a) => a.desde))
+      const ultima = Math.max(...as.map((a) => a.desde))
+      if (ultima - inicio >= SECUENCIA_MS)
+        console.log(`    ! secuencia en ${g}: una animación arranca ${ultima - inicio} ms después de otra (salir y después entrar, o escalonar): en una acción frecuente hace esperar`)
+    }
+  }
+  const largas = new Map()
+  for (const a of m.animaciones.filter((x) => x.duracionMs > 300)) {
+    const k = `${a.duracionMs} ms · ${a.grupo} (${a.propiedades.join(', ') || a.tipo})`
+    largas.set(k, (largas.get(k) ?? 0) + 1)
+  }
+  for (const [k, n] of [...largas].slice(0, 8)) console.log(`    ! animación de más de 300 ms${n > 1 ? ` ×${n}` : ''}: ${k}`)
+  const cortas = m.animaciones.length - [...largas.values()].reduce((s, n) => s + n, 0)
+  if (cortas) console.log(`    · ${cortas} animaciones de 300 ms o menos`)
+}
+if (movimiento) {
+  imprimirMovimiento('movimiento al cargar', movimiento.alCargar)
+  if (movimiento.alHacerClic)
+    imprimirMovimiento(`movimiento al hacer clic en ${movimiento.alHacerClic.selector}`, movimiento.alHacerClic, { esAccion: true })
+  const todas = Object.entries(movimiento.transicionAll)
+  if (todas.length) console.log(`    ! transition: all en ${todas.map(([k, n]) => `${k} ×${n}`).join(', ')}`)
+  console.log(`  detalle: ${join(out, `${name}.movimiento.json`)}. Criterio: knowledge/MOVIMIENTO.md del plugin`)
+}
+
 // Una página que no midió nada no cumple: no se midió. Pasa cuando la página falló al cargar (por ejemplo, un import
 // que no resuelve y el overlay de error de Vite) y, sin esta guarda, figuraría como «0 incumplimientos».
 if (r.textos === 0 && r.targets === 0) {
@@ -636,5 +925,6 @@ const falla =
   r.desbordeHorizontal ||
   r.noTextoBajo3 > 0 ||
   sinNombre.length > 0 ||
+  baseMovil.zoomBloqueado ||
   (focoResumen && (focoResumen.sinIndicadorDeFoco > 0 || focoResumen.aroBajo3 > 0))
 if (strict && falla) process.exit(1)

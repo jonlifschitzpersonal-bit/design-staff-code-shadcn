@@ -54,6 +54,20 @@ Leé primero las capturas y el brief, antes que los racionales. Usá como criter
   roles de componentes distinguibles, espaciado y alineación con contenido variable, repeticiones que ensucian.
 - **Accesibilidad:** lo que dice la medición, lo que no depende del color, y si `<name>.aria.yml` coincide con el
   contrato semántico de `ux.md`.
+- **Movimiento** (si algo se anima, y casi siempre algo se anima): con la lente de
+  `${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md` §7 (§1, §2 y §5 alcanzan para el criterio).
+  - **El nivel lo eligió el usuario:** sobrio, intermedio o expresivo, en la skill DS o en «Decisiones» del brief. Se
+    revisa contra ese nivel y contra los límites de §2, no contra tu gusto.
+  - **Sin nivel aprobado:** va como *Externo*.
+
+  Se juzga con tres fuentes:
+  - el resumen de movimiento de `medir.mjs` (`--movimiento`);
+  - el código: buscá con Grep en las rutas fuente `transition-all`, `CountingNumber`, `isAnimationActive`,
+    `TabsContent`, `transition=` y `animate`;
+  - los valores por defecto de la librería en `node_modules`, porque un valor por defecto también es una decisión.
+
+  Revisar el código encuentra los problemas, pero la medición dice cuánto duran: sin el resumen de movimiento, los
+  tiempos quedan como no comprobables. Cada hallazgo de movimiento va con su antes, después y por qué.
 - **Correcciones:** si es una segunda pasada, ¿cada corrección quedó al nivel de severidad de su hallazgo?
 
 Probá cada regla que no se rompe con un escenario adversarial propio: una interrupción, un error de conexión, un dato

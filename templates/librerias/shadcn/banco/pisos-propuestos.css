@@ -15,7 +15,7 @@
  *   1. Cambiá los pisos (1rem = 16 px, 2.75rem = 44 px) por los del proyecto.
  *   2. Los colores de la sección 2 son candidatos medidos en modo claro con el preset Nova: reemplazalos por los de la
  *      marca y volvé a medir. El modo oscuro NO está medido.
- *   3. Si ya lo aprobaste, pasá las secciones 1 a 4 a la capa de tema (src/index.css), UNA sola vez, SIN el
+ *   3. Si ya lo aprobaste, pasá las secciones 1 a 6 a la capa de tema (src/index.css), UNA sola vez, SIN el
  *      `@import` de la primera línea, y volvé a medir todas las pantallas.
  *
  * Costo que hay que decir en voz alta: subir --text-xs, --text-sm y --text-base al mismo tamaño APLANA la jerarquía por
@@ -80,6 +80,40 @@ body {
 [data-slot]:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
+}
+
+/* 5. Movimiento (knowledge/MOVIMIENTO.md). shadcn trae `transition-all` en Button, Badge y el disparador del acordeón:
+ *    anima propiedades que nadie eligió, como el alto, el padding o el foco. Se limita a lo que da feedback, con la curva
+ *    ease-out de Animate UI. `[data-slot$="-trigger"]` cubre los disparadores con `asChild` (sidebar, tooltip), que
+ *    reemplazan el data-slot del Button y se quedaban con su `transition-all`. El acordeón va después para ganarle.
+ *    Medido en el banco con `medir.mjs --movimiento`: «transition: all» pasa de button x5, badge x4, sidebar-trigger y
+ *    tooltip-trigger a ninguno. */
+[data-slot="button"],
+[data-slot$="-trigger"] {
+  transition-property: color, background-color, border-color, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+[data-slot="accordion-trigger"] {
+  transition-property: color, text-decoration-color;
+}
+[data-slot="badge"] {
+  transition-property: none; /* si el badge es un enlace en el producto: color, background-color */
+}
+
+/* 6. Base móvil (knowledge/SUPERFICIE_CODIGO.md §5): el toque no espera al doble toque. El resto de la base va en
+ *    index.html (viewport-fit=cover, theme-color) y en las barras fijas (env(safe-area-inset-*)). */
+a,
+button,
+input,
+label,
+select,
+textarea,
+summary,
+[role="button"],
+[role="tab"],
+[role="option"],
+[role="switch"] {
+  touch-action: manipulation;
 }
 
 /* Lo que ESTA capa no arregla (medilo igual):

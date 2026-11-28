@@ -94,7 +94,8 @@ Use blur when translucency and layering are meaningful.
 Ensure:
 - fallback when backdrop-filter is unsupported
 - text remains readable over changing content
-- reduced transparency mode if required by platform
+- `prefers-reduced-transparency: reduce` → frostier or solid surface: raise background opacity, drop the blur
+- `prefers-contrast: more` → near-solid backgrounds with a defined, contrasting border
 - blur does not obscure hierarchy
 
 ## 7. Texture
@@ -110,22 +111,13 @@ Do not apply noise merely to make CSS feel less flat.
 
 ## 8. Motion
 
-Use motion for:
-- feedback
-- state transition
-- continuity
-- spatial relationship
-- controlled attention
+Read `${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md`, the plugin's single source on motion: the three motion levels
+(sober, intermediate, expressive) that the user picks as part of the visual direction, the limits that hold at every
+level, curves and durations, accessibility, how to configure the project's library for each level, and how to measure
+it with `medir.mjs --movimiento`.
 
-Motion hierarchy:
-- frequent interactions: fast and restrained
-- structural transitions: slightly longer
-- expressive moments: only when context allows
-
-Respect `prefers-reduced-motion`.
-
-Avoid animating layout-heavy properties when transform/opacity can achieve the
-same effect more smoothly.
+In short: how much moves is taste and the user's call; what makes people wait or never settles is a defect at any
+level. Polish is making the occasional moments (dialog, menu, toast, switch) crisp and keeping data entrances short.
 
 ## 9. Effect Stacking
 

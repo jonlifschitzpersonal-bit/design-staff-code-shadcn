@@ -132,19 +132,24 @@ No hace falta si la pantalla sigue un sistema y patrones que el proyecto ya tien
    - el **esqueleto de la app**: navegación por dispositivo y composición del escritorio;
    - la **pantalla principal de cada tipo de usuario**, de 1 a 3 pantallas en total, en estado normal, en los
      viewports principales y medidas;
+   - un **nivel de movimiento** propuesto (sobrio, intermedio o expresivo, `knowledge/MOVIMIENTO.md` §1), funcionando
+     en esas pantallas;
    - `referencias-visuales.md` con las ideas de diseño tomadas de Mobbin para **cada** una de esas pantallas, no solo
      de flujo.
 
    Decile explícitamente que no construya los demás estados todavía.
 2. **Mostrale el checkpoint al usuario.** Incluí:
    - la URL de cada pantalla y las capturas;
-   - la dirección en 5 líneas: esqueleto y navegación, tipografía, color y marca, densidad, y lo que la hace propia;
+   - la dirección en 6 líneas: esqueleto y navegación, tipografía, color y marca, densidad, movimiento (el nivel y qué
+     se mueve, para que lo vea en la app y no solo en las capturas) y lo que la hace propia;
    - las 3 a 5 referencias de Mobbin que más pesaron, con lo que se tomó de cada una.
 
    Preguntá si va o qué cambiar. Si el pedido decía «mostrámela antes de preguntarme», esto es justamente mostrársela.
 3. **Con el OK,** continuá al mismo `ui` (SendMessage) para extender la dirección a los demás estados y pantallas.
    **Si pide cambios,** se rehacen esas mismas pantallas y se vuelven a mostrar; recién después se extiende. Anotá la
-   dirección aprobada en «Decisiones» del brief.
+   dirección aprobada en «Decisiones» del brief, con el nivel de movimiento.
+   **Si duda con el movimiento,** pedile a `ui` que le muestre los niveles funcionando, con un parámetro de URL
+   (`MOVIMIENTO.md` §1). Una descripción no alcanza para elegirlo.
 
 ## 4. Revisión del critic (automática)
 
@@ -155,7 +160,8 @@ final** con:
 - la **lista priorizada** de estados a revisar: primero el camino principal de cada rol, el de alto volumen y los
   estados del supuesto más riesgoso, en todos sus viewports; después el resto. Con más de 30 capturas, marcá cuáles
   son obligatorias;
-- las capturas de cada estado y viewport, y el resumen de medición que te pasó `ui`;
+- las capturas de cada estado y viewport, y el resumen de medición que te pasó `ui`, con el de movimiento
+  (`--movimiento`). Si `ui` no lo corrió, pedíselo antes de convocar al critic;
 - las rutas de los archivos fuente de las pantallas.
 
 El informe empieza con su cobertura («Revisé X de Y obligatorias, Z del resto»). Si no cubrió todas las obligatorias,

@@ -43,14 +43,49 @@ node tools/medir.mjs --url "http://localhost:5173/tools/banco/index.html?abierto
 - **Cambio de breakpoint:** a diferencia de HeroUI, el preset no baja el alto de los controles en pantallas grandes.
 - **Foco:** el aro del preset es `ring-ring/50` (mitad de opacidad) y no llega a 3:1; la capa lo reemplaza por un
   contorno opaco. En un campo con `aria-invalid` el aro por defecto no se ve.
-- **No medido:** modo oscuro (`--input` es blanco al 15 %), hover, seleccionado, y el movimiento de Animate UI.
+- **No medido:** modo oscuro (`--input` es blanco al 15 %), hover y seleccionado.
+- **Movimiento** (§5 de la capa): `transition-all` en Button, Badge, el acordeón y los disparadores con `asChild`. Se
+  limita por `data-slot`.
+- **Toque** (§6 de la capa): `touch-action: manipulation`.
 
 ## Animate UI
 
 `npm i @animate-ui/react motion` y `npx @animate-ui/cli@latest animate all --dry-run` (después sin `--dry-run`): cambia el
 import de la primitiva de cada componente shadcn por su versión animada y quita las clases de animación CSS que Motion
 reemplaza. No toca estructura, estilos ni API. `medir.mjs` mide con «reducir movimiento» activo por defecto, para no
-medir una entrada a medio hacer; `--motion` captura con animación, pero el movimiento no se evalúa.
+medir una entrada a medio hacer. `--movimiento` mide el movimiento en sí, cuadro a cuadro.
+
+**Sus curvas ya son las buenas.** Lo que hay que configurar son dos tiempos por defecto que rompen los límites de
+`knowledge/MOVIMIENTO.md` §2 en cualquier nivel, más lo que pida el nivel de movimiento del proyecto (§1).
+
+Medido en el banco el 26 y el 27-11-2026, con un dashboard. El usuario eligió el intermedio:
+
+| Qué | Por defecto | Intermedio (el del banco) | Sobrio |
+| --- | --- | --- | --- |
+| `TabsContent` | El panel sale y recién después entra el otro: ~520 ms por cada cambio de pestaña (rompe el límite 2) | `transition = { duration: 0.18, ease: [0.23, 1, 0.32, 1] }` y `exitTransition = { duration: 0 }` por defecto en `src/components/ui/tabs.tsx` (abajo): el nuevo entra en 180 ms, sin esperar | Las dos en `{ duration: 0 }` |
+| `CountingNumber` | Cuenta desde 0 en cada montaje; el resorte no se queda quieto en 12 s (rompe el límite 3) | Cuenta la primera vez por carga, con `transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}` y `key` estable (`MOVIMIENTO.md` §5) | `initiallyStable` y `duration: 0.3` |
+| Series de Recharts | Crecen 400 ms en cada montaje | `"auto"`, 500 ms y `ease-out` la primera vez por carga; después `false` | `isAnimationActive={false}` |
+| Indicador de la pestaña activa, valor del select | Se mueven entre 400 y 500 ms (resorte) | Se dejan: son el feedback. Si molestan, se acortan con `transition` | Igual |
+
+Medido con `medir.mjs --movimiento`:
+
+| | Al cargar, quieta a los | Después de cambiar de pestaña |
+| --- | --- | --- |
+| Intermedio | ~1,5 s | El panel entra a los 11 ms, en 180 ms |
+| Sobrio | ~0,8 a 1,0 s | Instantáneo |
+| Por defecto | No queda quieta en 12 s | Secuencia de ~520 ms |
+
+```tsx
+// src/components/ui/tabs.tsx (nivel intermedio): el panel nuevo entra corto y sin esperar al que sale; el indicador
+// del TabsList sigue animado. En sobrio, las dos transiciones en { duration: 0 }.
+const ENTRADA = { duration: 0.18, ease: [0.23, 1, 0.32, 1] } as const
+const SALIDA = { duration: 0 }
+function TabsContent({ className, transition = ENTRADA, exitTransition = SALIDA, ...props }:
+  React.ComponentProps<typeof TabsPrimitive.Content>) {
+  return <TabsPrimitive.Content data-slot="tabs-content" className={cn("flex-1 text-sm outline-none", className)}
+    transition={transition} exitTransition={exitTransition} {...props} />
+}
+```
 
 ## Lo que shadcn no trae: ui-sdk
 

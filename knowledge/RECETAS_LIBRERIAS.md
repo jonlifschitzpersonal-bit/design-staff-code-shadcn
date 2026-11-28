@@ -73,10 +73,43 @@ lo anterior (medido con el preset Nova, ver `templates/librerias/shadcn/README.m
 - **Animate UI** (`@animate-ui/react` + `motion`) cambia el import de la primitiva de cada componente por su versión
   animada y quita las clases de animación CSS que Motion reemplaza; no cambia estructura ni estilos, así que los pisos
   siguen valiendo. Corré `npx @animate-ui/cli@latest animate all --dry-run` antes de aplicarlo. El movimiento sale de la
-  librería: no se escribe a mano. Respeta «reducir movimiento»; `medir.mjs` mide con esa preferencia activa y las
-  capturas salen en estado final. **El movimiento en sí no se mide**: se dice como no comprobable.
+  librería: no se escribe a mano. **Sus curvas ya son buenas; lo que fallan son dos tiempos por defecto**, que rompen
+  los límites de `MOVIMIENTO.md` §2 en cualquier nivel:
+  - el resorte de `CountingNumber` no se queda quieto en 12 s;
+  - `TabsContent` hace salir un panel y recién después entrar el otro.
+
+  Cómo se configura cada pieza para el nivel de movimiento del proyecto está en `MOVIMIENTO.md` §5. Se mide con
+  `medir.mjs --movimiento`.
+- **Capa de movimiento.** shadcn trae `transition-all` en Button, Badge, el acordeón y en los disparadores con `asChild`
+  (que heredan el del Button). Se corrige una vez, por `data-slot`, como los pisos:
+  `templates/librerias/shadcn/banco/pisos-propuestos.css` §5.
+- **Toasts: Sonner** (`sonner`, el que trae shadcn). Un solo `<Toaster />`, montado en la raíz.
+  - **`theme`:** por defecto es `light` y no sigue al sistema. Pasale el tema resuelto.
+  - **Estilos:** Sonner inyecta su CSS después del tema, así que la capa le gana con un prefijo (`html [data-sonner-toast]`).
+    Para un toast del sistema de diseño, lo recomendado es `toast.custom()`: sin estilos de Sonner, con su
+    posicionamiento.
+  - **Acción con «Deshacer»:** `action: { label, onClick }`.
+  - **En móvil, si hay una barra fija abajo,** `mobileOffset` la esquiva sumando el área segura
+    (`SUPERFICIE_CODIGO.md` §5).
+  - **Un toast que no aparece** suele ser un `<Toaster />` desmontado.
+  - **Un toast que aparece dos veces** suele ser dos `<Toaster />`.
 
 ## 5. Lo que la librería no trae: ui-sdk
+
+**Antes de buscar afuera,** se busca en este orden. Lo que el proyecto ya tiene instalado manda; el orden decide solo
+para lo que falta.
+1. **La librería del proyecto** (shadcn: `npx shadcn@latest add <nombre>`).
+2. **Animate UI,** si el proyecto lo usa y el componente existe animado.
+3. **ui-sdk,** para un comportamiento difícil (abajo).
+4. **Una librería de nicho** para el resto:
+   - **Virtuoso** para listas o tablas de más de unas mil filas;
+   - **dnd kit** para arrastrar y soltar, siempre con una alternativa por clic (WCAG 2.5.7);
+   - **cmdk** para la paleta de comandos (ya la usa shadcn en `command`);
+   - **Vaul** para drawers con gesto (ya la usa shadcn en `drawer`);
+   - **input-otp** para códigos de verificación.
+
+No se suman otras primitivas (Base UI, React Aria) al lado de Radix, ni otra librería para animar números (NumberFlow):
+duplican comportamiento y suman choques.
 
 Cuando falta un componente con **comportamiento difícil** (fecha tipeable con calendario, combobox tipeable, número o
 monto con formato, o cualquier patrón APG con foco, teclado y ARIA propios), no se escribe a mano: ahí aparecen los bugs

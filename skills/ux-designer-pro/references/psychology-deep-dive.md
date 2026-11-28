@@ -9,7 +9,7 @@ point in opposite directions.
 2. Worked conflicts (the hard part)
 3. The same brief, different answers
 4. Persuasion mechanics and their ethical line
-5. Animation timing reference
+5. Animation timing (moved to `knowledge/MOVIMIENTO.md`)
 
 ---
 
@@ -149,30 +149,8 @@ Persuasion survives transparency; manipulation doesn't.
 
 ---
 
-## 5. Animation Timing Reference
+## 5. Animation Timing
 
-| Element | Duration | Easing |
-|---|---|---|
-| Button hover/press | 100-150ms | ease-out |
-| Tooltip appear | 150-200ms | ease-out |
-| Dropdown open | 200-250ms | ease-out |
-| Modal enter | 250-300ms | ease-out |
-| Modal exit | 200ms | ease-in |
-| Page transition | 300-400ms | ease-in-out |
-| Skeleton shimmer | 1500ms loop | linear |
-| Stagger between items | 50-80ms | -- |
-
-Rules:
-- Closing faster than opening -- leaving must feel effortless
-- Linear easing only for continuous loops (progress, shimmer); everywhere
-  else it reads as mechanical
-- Animate only `transform` and `opacity` (GPU-accelerated)
-- `prefers-reduced-motion: reduce` → remove all non-essential animation
-
-CSS easing values:
-```css
---ease-out: cubic-bezier(0.16, 1, 0.3, 1);
---ease-in: cubic-bezier(0.7, 0, 0.84, 0);
---ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
---spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-```
+Moved to `${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md`, the plugin's single source on motion: motion levels
+the user approves, limits that hold at every level (keyboard, frequent actions, data settling time), curves,
+durations, the project's library defaults, and how to measure it. The old table here used `ease-in` on exits and treated reduced motion as zero; both are wrong.

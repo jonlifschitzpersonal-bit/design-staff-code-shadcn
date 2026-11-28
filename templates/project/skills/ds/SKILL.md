@@ -42,6 +42,25 @@ Pares ya medidos: <par → ratio, o «ninguno: medir todo»>.
 Costo de los pisos: si igualaron tamaños, la jerarquía se recupera con peso, color y espacio, o con una escala propia
 por encima del piso.
 
+## Movimiento
+
+Criterio general en `knowledge/MOVIMIENTO.md` del plugin. Acá va lo propio de <Proyecto>.
+
+- **Nivel:** <sobrio | intermedio | expresivo (`MOVIMIENTO.md` §1), quién lo aprobó y cuándo (checkpoint de dirección
+  visual). Hasta el checkpoint: «pendiente».>
+- **Cómo se configura en esta pila:** <tabla: pieza, cómo, dónde, para este nivel (`MOVIMIENTO.md` §5). Por ejemplo
+  `CountingNumber` con `transition` de duración fija, la serie de Recharts con `isAnimationActive` explícito, el
+  `TabsContent` del proyecto sin secuencia, y la capa de movimiento en el tema.>
+- **Chequeos** (tienen que dar vacío): <los greps de `MOVIMIENTO.md` §6, adaptados a la pila.>
+- **Medido:** <cuándo queda quieta cada pantalla principal al cargar y después de la acción frecuente
+  (`medir.mjs --movimiento`), con fecha.>
+
+## Base móvil
+
+<Si el producto se usa en un teléfono: qué está aplicado de `knowledge/SUPERFICIE_CODIGO.md` §5 (viewport-fit=cover,
+theme-color y dónde se actualiza, áreas seguras por barra fija, touch-action), qué se decidió no aplicar y por qué, y qué
+falta probar en un teléfono real. Si no se usa en un teléfono: «no aplica».>
+
 ## Reglas
 
 - Si un componente de la librería da el diseño, se usa tal cual. Si no, se corrige una vez en el tema o se arma uno

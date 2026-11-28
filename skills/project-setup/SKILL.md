@@ -42,6 +42,18 @@ Con lo que falló en el banco, proponé la capa de pisos (`banco/pisos-propuesto
 del proyecto). Aplicala a la capa de tema de `src/` **solo si el usuario la aprueba**, y decí qué jerarquía de tamaños
 se aplana.
 
+En la misma propuesta van dos cosas más:
+- **La capa de movimiento** (§5 de la plantilla de shadcn): `transition-all` → propiedades explícitas.
+- **La base móvil, si el producto se usa en un teléfono** (`knowledge/SUPERFICIE_CODIGO.md` §5):
+  - `viewport-fit=cover`;
+  - `theme-color` por esquema;
+  - `touch-action`.
+
+Si la librería rompe por defecto los límites de `knowledge/MOVIMIENTO.md` §2 (un resorte que no se queda quieto, una
+secuencia al cambiar de pestaña), proponé corregirlo una vez. El **nivel de movimiento** (sobrio, intermedio o
+expresivo) no se decide acá: es dirección visual y se elige en el checkpoint. Hasta entonces, la sección «Movimiento»
+de la skill DS dice «nivel: pendiente».
+
 ## 5. Generar
 
 | Plantilla | Destino |

@@ -226,6 +226,15 @@ Mathematical alignment is not always perceptual alignment.
 
 Use grouping and whitespace before adding more cards or borders.
 
+Typography detail (adapted from `apple-design`, `emilkowalski/skills`, MIT):
+- **Tracking is size-specific.** Large display text wants negative tracking (about `-0.02em`); body stays near `0`;
+  small labels may take slightly positive tracking. One `letter-spacing` for every size is wrong somewhere.
+- **Leading tracks size inversely.** Tight on large headings (about 1.05–1.2), comfortable on body (about 1.5),
+  tighter in dense data UI.
+- **Hierarchy is weight + size + leading as a set.** When accessibility floors flatten sizes, weight and color carry
+  it.
+- **Scale with the user's text size.** Spacing in `rem`/`em`, so larger text does not break the layout.
+
 Read [art direction and graphic design](references/art-direction-and-graphic-design.md).
 
 ## 8. Art Direction Before Decoration
@@ -427,7 +436,12 @@ Do not prove robustness with only short English sample text.
 ## 17. Motion and Materiality
 
 Use motion for feedback, continuity, state transition, spatial relationship,
-and controlled attention.
+and controlled attention. How much the app moves is a motion level (sober,
+intermediate, expressive) that the user approves in the visual-direction
+checkpoint; the limits hold at every level: nothing on keyboard actions,
+nothing that makes a frequent action wait, data settles within 1 s,
+interface motion under 300 ms, never `transition: all`. Both live in
+`${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md` (the single source).
 
 Use gradients, shadow, borders, blur, transparency, texture, and glow for
 depth, grouping, surface separation, or brand atmosphere.

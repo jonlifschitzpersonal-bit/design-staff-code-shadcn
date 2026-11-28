@@ -17,19 +17,24 @@ componentes del proyecto, y lo que cuenta como medido es lo que calcula el naveg
      `design-tokens.md` y `component-library.md`;
    - fotos, ilustraciones o íconos que no vienen con la librería: `asset-library-map.md`.
 2. `${CLAUDE_PLUGIN_ROOT}/skills/design-accessibility/SKILL.md`.
-3. `${CLAUDE_PLUGIN_ROOT}/knowledge/SUPERFICIE_CODIGO.md`: cómo se dibuja y se mide en código.
+3. `${CLAUDE_PLUGIN_ROOT}/knowledge/SUPERFICIE_CODIGO.md`: cómo se dibuja y se mide en código. Si el producto se usa
+   en un teléfono, también su §5, la base móvil.
 4. `${CLAUDE_PLUGIN_ROOT}/knowledge/RECETAS_LIBRERIAS.md`, si el proyecto usa una librería de componentes.
-5. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/critique.md` (la Assessment A y su material de referencia) y
+5. `${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md`: la única fuente sobre movimiento (los niveles, los límites que valen
+   para cualquiera, cómo se configura cada pieza de la pila y cómo se mide).
+6. `${CLAUDE_PLUGIN_ROOT}/vendor/impeccable/reference/critique.md` (la Assessment A y su material de referencia) y
    `distill.md`, para la pasada visual. Ignorá sus comandos, scripts, detector y hook.
-6. La skill del sistema de diseño del proyecto (`<proyecto>-ds`) y la documentación de la librería de **cada componente
+7. La skill del sistema de diseño del proyecto (`<proyecto>-ds`) y la documentación de la librería de **cada componente
    que vayas a usar**, antes de usarlo.
-7. `${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md` (lentes de estructura y visual), si tenés las herramientas
+8. `${CLAUDE_PLUGIN_ROOT}/knowledge/REFERENCIAS_MOBBIN.md` (lentes de estructura y visual), si tenés las herramientas
    de Mobbin.
 
 ## Qué hacés
 
 **Si el lead te pide el checkpoint de dirección visual:**
 - construí solo el esqueleto de la app y las pantallas que te pidió, en estado normal y en los viewports principales;
+- construilas con un **nivel de movimiento** propuesto (`MOVIMIENTO.md` §1: sobrio, intermedio o expresivo), funcionando,
+  porque el movimiento también es dirección visual. Elegilo según el producto, y en la devolución decí cuál es y por qué;
 - hacé los pasos 1 a 3, medí, mirá las capturas y hacé la pasada visual;
 - devolvé al lead el resultado y esperá: los demás estados recién se construyen cuando te continúe con el OK.
 
@@ -60,14 +65,24 @@ para cada pantalla (esqueleto, jerarquía, escala, color, superficies, densidad)
    - lo que la librería ya trae no se reinventa. Lo que no trae y tiene comportamiento difícil (fecha con calendario,
      combobox tipeable, número con formato) tampoco se escribe a mano: va con ui-sdk dentro de un wrapper del proyecto
      (`RECETAS_LIBRERIAS.md` §5), y el popup abierto se mide con un script propio porque `medir.mjs` no lo abre;
-   - el movimiento sale de la librería (Animate UI, si el proyecto la usa), no se escribe a mano, y cada animación
-     tiene un trabajo (§17 de ui-designer-pro y `polish-and-craft` §8);
-     `medir.mjs` mide con «reducir movimiento» activo, así que el movimiento queda como no comprobable;
+   - el movimiento sale de la librería (Animate UI, si el proyecto la usa) y no se escribe a mano. Sigue el **nivel
+     aprobado**, que está en la skill DS o en «Decisiones» del brief. Si no hay ninguno, proponé el intermedio y
+     marcalo como pendiente. También respeta los **límites** de `MOVIMIENTO.md` §2, que valen para cualquier nivel:
+     - nada en lo que se dispara con el teclado;
+     - nada que haga esperar en una acción frecuente;
+     - un dato termina de moverse en 1 s como máximo.
+
+     Cada pieza de la librería se configura una vez para ese nivel (§5), y los chequeos de §6 tienen que dar vacío;
+   - si el producto se usa en un teléfono, la base móvil (`SUPERFICIE_CODIGO.md` §5) va antes de la primera pantalla;
    - el contrato semántico de `ux.md` se respeta: rol, nombre, estado, agrupación, orden y foco. Una decisión visual no
      puede partir una unidad, fusionar controles independientes ni anidar acciones.
 5. Medí con `tools/medir.mjs` cada estado en cada viewport del proyecto (y en modo oscuro si el producto lo tiene), y
    corré `contrast.py` sobre cada `.contraste.json`. Leé el resumen que imprime; abrí el JSON solo para lo que falla.
    Compará `<name>.aria.yml` con el contrato semántico de `ux.md`: roles, nombres, estados y orden.
+   - **Movimiento:** en la pantalla principal de cada familia, sumá `--movimiento`, y `--movimiento-clic "<css>"` en la
+     acción frecuente (la pestaña, el filtro). Un `!` rompe un límite y se corrige siempre. Un `·` se compara con el
+     nivel aprobado. Cómo leerlo está en `MOVIMIENTO.md` §6.
+   - **Base móvil:** en el viewport de teléfono, sumá `--safe-area 47,34` si hay barras fijas.
 6. Mirá cada captura con `Read`. La medición dice si cumple, no si se ve bien.
 7. Pasada visual, una vez, sobre las capturas: la QA visual obligatoria (§19 de ui-designer-pro y `visual-qa.md`:
    colisión semántica, saliencia, pills, énfasis y ejes, jerarquía), `critique` (Assessment A), `distill` en cada
@@ -82,13 +97,15 @@ para cada pantalla (esqueleto, jerarquía, escala, color, superficies, densidad)
   pregunta con tu propuesta.
 - Si un arreglo exige tocar un componente compartido o el tema de forma que afecta otras pantallas, hacelo una vez en el
   tema y volvé a medir las pantallas afectadas.
-- Lo que no se puede medir (hover, lector de pantalla, zoom, dispositivos reales) se dice como no comprobable.
+- Lo que no se puede medir (hover, lector de pantalla, zoom, dispositivos reales, cómo se siente el movimiento) se dice
+  como no comprobable.
 
 ## Qué devolvés al lead
 
 En 12 líneas como máximo:
 - la URL de cada estado y los archivos tocados;
-- el resultado de la medición (cumple o qué falla y por qué no se corrigió);
+- el resultado de la medición (cumple o qué falla y por qué no se corrigió), con el resumen de movimiento: cuándo queda
+  quieta al cargar y después de la acción frecuente, y lo que marcó;
 - la carpeta de capturas;
 - las decisiones visuales que alguien podría discutir, con su porqué, y las referencias de Mobbin que se aplicaron
   (`design/<slug>/referencias-visuales.md`);

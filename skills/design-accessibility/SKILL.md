@@ -84,6 +84,9 @@ python "${CLAUDE_PLUGIN_ROOT}/skills/design-accessibility/scripts/contrast.py" -
 | 1.1.1 Contenido no textual | Íconos solos, imágenes y gráficos tienen un texto alternativo definido | Va en las notas para desarrollo |
 | 3.2.3 / 3.2.4 Consistencia | La misma función tiene el mismo nombre, ícono y lugar en todas las pantallas | — |
 | 2.3.1 Destellos | Nada parpadea más de 3 veces por segundo | — |
+| 2.2.2 Pausar, detener, ocultar | Lo que se mueve, parpadea o se actualiza solo durante más de 5 s (carrusel, marquesina, contador en vivo) se puede pausar o detener | — |
+| 2.3.3 (AAA, recomendado) y «reducir movimiento» | Con `prefers-reduced-motion: reduce` el movimiento es menos y más suave, no cero: quedan opacidad y color, se van desplazamiento, escala y rebote, y los datos aparecen con su valor final (`MOVIMIENTO.md` §4) | `medir.mjs` mide con esa preferencia; `--movimiento`, sin ella |
+| 1.4.4 Zoom | El viewport nunca bloquea el zoom (`user-scalable=no`, `maximum-scale=1`): si iOS hace zoom en un campo, la causa es un texto de menos de 16 px | `medir.mjs` lo marca como falla |
 | 1.2.x / 1.4.2 Media y audio | Los videos tienen subtítulos; el audio que suena solo se puede pausar; la información no depende solo del sonido | — |
 
 **Targets.** WCAG pide un piso de 24×24. Las guías de plataforma recomiendan más:
@@ -131,5 +134,5 @@ implementar** o se decidió distinto:
   validación de usuarios.
 - Lo que `tools/medir.mjs` no mide queda como **no comprobable** salvo que lo pruebes aparte con Playwright: lector de
   pantalla, anuncios de `aria-live`, orden real de lectura, zoom del sistema, dispositivos reales, contraste sobre
-  imágenes y animaciones. Una librería como React Aria cubre mucho de ARIA y teclado, pero «lo trae la librería» no es
+  imágenes y cómo se siente el movimiento (sus tiempos sí se miden con `--movimiento`). Una librería como React Aria cubre mucho de ARIA y teclado, pero «lo trae la librería» no es
   una medición: se prueba.

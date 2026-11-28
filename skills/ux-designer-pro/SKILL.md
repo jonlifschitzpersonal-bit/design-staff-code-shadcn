@@ -315,12 +315,16 @@ Use motion only when it helps:
 - confirm action
 - direct attention
 - communicate hierarchy
-Keep frequent actions fast and unobtrusive.
-Respect reduced-motion preferences.
-Avoid fixed timing dogma; test perceived responsiveness in context.
+Keyboard-triggered actions do not animate, and frequent actions (navigation,
+tabs, filters, period changes) never make the user wait for an exit before
+the new content enters. How much data and transitions move is the project's
+motion level (sober, intermediate, expressive), approved by the user with
+the visual direction. In `ux.md`, say which transitions move and the job of
+each.
+Respect reduced-motion preferences (gentler, not zero).
 Animation should not block task completion.
-Detailed timing references live in
-[references/psychology-deep-dive.md](references/psychology-deep-dive.md).
+Levels, limits, values, and measurement live in
+`${CLAUDE_PLUGIN_ROOT}/knowledge/MOVIMIENTO.md` (§1 and §2).
 ## 14. Design for Novice and Expert Use
 When segments differ:
 - novice → explanation, safe defaults, progressive guidance
